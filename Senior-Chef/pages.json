@@ -1,0 +1,73 @@
+{
+	"easycom": {
+	    "autoscan": true,
+	    "custom": {
+	        "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+	    }
+	},
+	"pages": [ 
+		{
+			"path": "pages/home/index",
+			"style": {
+				"navigationBarTitleText": "有啥吃啥"
+			}
+		},
+		{
+			"path": "pages/nutritionist/index",
+			"style": {
+				"navigationBarTitleText": "营养专家"
+			}
+		},
+		{
+			"path": "pages/mystic/index",
+			"style": {
+				"navigationBarTitleText": "玄学大师"
+			}
+		},
+		{
+			"path": "pages/profile/index",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		}
+	],
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#007AFF",
+		"backgroundColor": "#F8F8F8",
+		"borderStyle": "black",
+		"list": [
+      {
+        "pagePath": "pages/home/index",
+        "iconPath": "static/tab-bar/fridge.png",
+        "selectedIconPath": "static/logo.png",
+        "text": "有啥吃啥"
+      },
+      {
+        "pagePath": "pages/nutritionist/index",
+        "iconPath": "static/tab-bar/nutritionist.png",
+        "selectedIconPath": "static/logo.png",
+        "text": "营养专家"
+      },
+      {
+        "pagePath": "pages/mystic/index",
+        "iconPath": "static/tab-bar/crystal.png",
+        "selectedIconPath": "static/logo.png",
+        "text": "玄学大师"
+      },
+			{
+				"pagePath": "pages/profile/index",
+				"iconPath": "static/tab-bar/chef-f.png",
+				"selectedIconPath": "static/logo.png",
+				"text": "我的"
+			}
+		]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"uniIdRouter": {}
+}
