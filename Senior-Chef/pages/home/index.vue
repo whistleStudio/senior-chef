@@ -132,26 +132,23 @@ const onClickCook = async () => {
 		return;
 	}
 	console.log('Cooking with selected food...');
+	uni.showLoading({
+		title: '正在为您烹饪...'
+	});
 	const data = await utils.reqData({
 		url: "/api/menu/cook",
 		method: "POST",
 		payload: {
-			food: allSelectedFood
+			food: allSelectedFood.join(',')
 		}
 	})
+		uni.hideLoading();
+		uni.showToast({
+			title: `烹饪完成！}`,
+			icon: 'success',
+			duration: 1000
+		});
 	console.log('Cook Response:', data);
-
-	// uni.showLoading({
-	// 	title: '正在为您烹饪...'
-	// });
-	// setTimeout(() => {
-	// 	uni.hideLoading();
-	// 	uni.showToast({
-	// 		title: `烹饪完成！所选食材：${allSelectedFood.join('，')}`,
-	// 		icon: 'success',
-	// 		duration: 3000
-	// 	});
-	// }, 2000);
 }
 
 watch(selectedDefaultFood.value, (newVal) => {
