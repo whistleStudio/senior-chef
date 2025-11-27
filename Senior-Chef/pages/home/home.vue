@@ -20,7 +20,7 @@
 			<scroll-view scroll-y class="content" :show-scrollbar="false" style="height: 250rpx;">
 				<view class="content-box" style="justify-content: flex-start;">
 					<uni-tag v-for="(cv, ci) in [...customFood, '+']" :key="cv" :text="cv" class="food-tag food-custom-tag" type="success" :customStyle="customTagStyle"
-					:solid="selectedCustomFood.has(cv)" :inverted="!selectedCustomFood.has(cv)" @click="onClickCustomTag(cv, ci)" @longpress="onLongPressCustomTag(cv, ci)"/>
+				  :inverted="!selectedCustomFood.has(cv)" @click="onClickCustomTag(cv, ci)" @longpress="onLongPressCustomTag(cv, ci)"/>
 				</view>
 			</scroll-view>
 		</view>
@@ -30,8 +30,8 @@
 		</view>                                  
 	</view>	
 	<uni-popup ref="inputDialog" type="dialog">
-		<uni-popup-dialog ref="inputClose"  mode="input" title="输入内容" value="对话框预置提示内容!"
-			placeholder="请输入内容" @confirm="dialogInputConfirm"></uni-popup-dialog>
+		<uni-popup-dialog ref="inputClose"  mode="input" title="自定义食材" value="对话框预置提示内容!"
+			placeholder="请输入内容（长按标签删除）" @confirm="dialogInputConfirm"></uni-popup-dialog>
 	</uni-popup>
 	<uni-popup ref="popup" type="bottom" border-radius="10px 10px 0 0">底部弹出 Popup 自定义圆角</uni-popup>
 </template>
@@ -40,6 +40,7 @@
 import { ref, watch } from 'vue';
 import global from '@/common/global.js';
 import utils from '@/common/utils.js';
+import { useMenuStore } from '@/store/menu-store.js';
 
 const foodList = global.foodList;
 const selectedDefaultFood = ref(new Set());
@@ -51,6 +52,7 @@ const activeColor = ref(global.primaryColorDark);
 const inActiveColor = ref(global.primaryColorLight);
 const inputDialog = ref(null);
 const popup = ref(null);
+const menuStore = useMenuStore();
 
 const customTagStyle = `
 	display:flex;
@@ -107,6 +109,7 @@ const dialogInputConfirm = (val) => {
 const onLongPressCustomTag = (tag, index) => {
 	if (index === customFood.value.size) return; // +号不处理
 	customFood.value.delete(tag);
+	selectedCustomFood.value.delete(tag);
 	if (tag.length > 4) {
 		tag = tag.slice(0,3) + '..';
 	}
@@ -119,6 +122,7 @@ const onLongPressCustomTag = (tag, index) => {
 }
 
 // 点击烹饪按钮
+const menuTestJson = import('@/static/menu.test.json'); // 测试节省付费接口请求次数用
 const onClickCook = async () => {
 	const allSelectedFood = [
 		...Array.from(selectedDefaultFood.value),
@@ -135,20 +139,32 @@ const onClickCook = async () => {
 	uni.showLoading({
 		title: '正在为您烹饪...'
 	});
-	const data = await utils.reqData({
-		url: "/api/menu/cook",
-		method: "POST",
-		payload: {
-			food: allSelectedFood.join(',')
-		}
-	})
-		uni.hideLoading();
-		uni.showToast({
-			title: `烹饪完成！}`,
-			icon: 'success',
-			duration: 1000
+	// const res = await utils.reqData({
+	// 	url: "/api/menu/cook",
+	// 	method: "POST",
+	// 	payload: {
+	// 		food: allSelectedFood.join(',')
+	// 	}
+	// })
+	uni.hideLoading();
+	uni.showToast({
+		title: `烹饪完成！}`,
+		icon: 'success',
+		duration: 1000
+	});
+	const res = await menuTestJson;
+	console.log('Cook Response:', res);
+	if (res && res.err === 0) {
+		menuStore.menuData.value = res.data;
+		uni.navigateTo({
+			url: '/pages/menu/menu'
 		});
-	console.log('Cook Response:', data);
+	} else {
+		uni.showToast({
+			title: res.message || '烹饪失败，请重试',
+			icon: 'none'
+		});
+	}
 }
 
 watch(selectedDefaultFood.value, (newVal) => {
@@ -179,7 +195,7 @@ watch(selectedDefaultFood.value, (newVal) => {
 	.content-box {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 10px;
+		gap: 20rpx;
 		justify-content: space-between;
 		align-items: center;
 		.food-custom-tag {

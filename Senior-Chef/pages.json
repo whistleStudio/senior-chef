@@ -7,27 +7,33 @@
 	},
 	"pages": [ 
 		{
-			"path": "pages/home/index",
+			"path": "pages/home/home",
 			"style": {
 				"navigationBarTitleText": "有啥吃啥"
 			}
 		},
 		{
-			"path": "pages/nutritionist/index",
+			"path": "pages/nutritionist/nutritionist",
 			"style": {
 				"navigationBarTitleText": "营养专家"
 			}
 		},
 		{
-			"path": "pages/mystic/index",
+			"path": "pages/mystic/mystic",
 			"style": {
 				"navigationBarTitleText": "玄学大师"
 			}
 		},
 		{
-			"path": "pages/profile/index",
+			"path": "pages/profile/profile",
 			"style": {
 				"navigationBarTitleText": "我的"
+			}
+		},
+		{
+			"path": "pages/menu/menu",
+			"style": {
+				"navigationBarTitleText": ""
 			}
 		}
 	],
@@ -38,25 +44,25 @@
 		"borderStyle": "black",
 		"list": [
       {
-        "pagePath": "pages/home/index",
+        "pagePath": "pages/home/home",
         "iconPath": "static/tab-bar/fridge.png",
         "selectedIconPath": "static/logo.png",
         "text": "有啥吃啥"
       },
       {
-        "pagePath": "pages/nutritionist/index",
+        "pagePath": "pages/nutritionist/nutritionist",
         "iconPath": "static/tab-bar/nutritionist.png",
         "selectedIconPath": "static/logo.png",
         "text": "营养专家"
       },
       {
-        "pagePath": "pages/mystic/index",
+        "pagePath": "pages/mystic/mystic",
         "iconPath": "static/tab-bar/crystal.png",
         "selectedIconPath": "static/logo.png",
         "text": "玄学大师"
       },
 			{
-				"pagePath": "pages/profile/index",
+				"pagePath": "pages/profile/profile",
 				"iconPath": "static/tab-bar/chef-f.png",
 				"selectedIconPath": "static/logo.png",
 				"text": "我的"
