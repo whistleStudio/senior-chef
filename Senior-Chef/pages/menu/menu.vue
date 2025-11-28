@@ -45,7 +45,4 @@ const nutriKMap = {
 
 </script>
 
-<style lang="scss" src="./menu.scss">
-// @import url('./menu.scss');
-	       
-</style>
+<style lang="scss" src="./menu.scss"></style>

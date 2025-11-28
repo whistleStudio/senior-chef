@@ -139,19 +139,28 @@ const onClickCook = async () => {
 	uni.showLoading({
 		title: '正在为您烹饪...'
 	});
-	// const res = await utils.reqData({
-	// 	url: "/api/menu/cook",
-	// 	method: "POST",
-	// 	payload: {
-	// 		food: allSelectedFood.join(',')
-	// 	}
-	// })
-	uni.hideLoading();
-	uni.showToast({
-		title: `烹饪完成！}`,
-		icon: 'success',
-		duration: 1000
-	});
+	try {
+		// const res = await utils.reqData({
+		// 	url: "/api/menu/cook",
+		// 	method: "POST",
+		// 	payload: {
+		// 		food: allSelectedFood.join(',')
+		// 	}
+		// })
+		uni.hideLoading();
+		uni.showToast({
+			title: `烹饪完成！}`,
+			icon: 'success',
+			duration: 1000
+		});
+	} catch (error) {
+		uni.hideLoading();
+		uni.showToast({
+			title: '烹饪失败，请重试',
+			icon: 'none'
+		});
+		return;
+	}
 	const res = await menuTestJson;
 	console.log('Cook Response:', res);
 	if (res && res.err === 0) {

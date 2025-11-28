@@ -3,10 +3,9 @@ import { ref } from "vue";
 
 export const useMenuStore = defineStore("menu", () => {
   const menuData = ref({});
+  const menu2Data = ref([]);
 
 
 
-
-  
-  return { menuData };
+  return { menuData, menu2Data };
 })

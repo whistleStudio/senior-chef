@@ -1,7 +1,7 @@
 const express = require('express');
 const rt = express.Router();
 const { OpenAI } = require("openai");
-const { generateFridgePrompt } = require('../utils/prompt-gen');
+const { generateFridgePrompt, generateNutritionistPrompt } = require('../utils/prompt-gen');
 
 // qwen3-vl-flash qwen-flash
 const openai = new OpenAI(
@@ -27,7 +27,22 @@ rt.post("/cook", (req, res) => {
       if (aiResponse) res.json({err: 0, data: aiResponse });
       else res.json({ err: 2, msg: "Response not match rules" });
     } catch (error) {
-      console.error("Error communicating with AI:", error);
+      console.error("Error /cook:", error);
+      res.json({ err: 1, msg: "AI communication error" });
+    }
+  })()
+});
+
+rt.post("/nutritionist-cook", (req, res) => {
+  console.log("original nutritionist-cook req.body: ", req.body);
+  ;(async () => {
+    try {
+      const prompt = generateNutritionistPrompt(req.body || {});
+      const aiResponse = await askAi(prompt);
+      if (aiResponse) res.json({err: 0, data: aiResponse });
+      else res.json({ err: 2, msg: "Response not match rules" });
+    } catch (error) {
+      console.error("Error /nutritionist-cook:", error);
       res.json({ err: 1, msg: "AI communication error" });
     }
   })()

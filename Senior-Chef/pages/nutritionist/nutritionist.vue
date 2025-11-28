@@ -10,7 +10,7 @@
           v-for="(chname, k) in nutriMap"
           :key="k"
           :name="chname"
-          v-model:state="nutriStateList[k]"
+          v-model:state="nutriState[k]"
         />
       </scroll-view>
     </view>
@@ -26,7 +26,10 @@
         />
       </scroll-view>
     </view>
-
+    <view class="cook">
+			<image style="height: 280rpx;" src="@/static/pot.png" mode="aspectFit"
+			@click="onClickCook"/>
+		</view>
   </view>
   <uni-popup ref="inputDialog" type="dialog">
 		<uni-popup-dialog ref="inputClose"  mode="input" title="我不想吃"
@@ -38,13 +41,22 @@
 import { ref } from 'vue';
 import NutriToggle from '@/components/NutriToggle/NutriToggle.vue';
 import global from '@/common/global.js';
+import utils from '@/common/utils.js';
+import { useMenuStore } from '@/store/menu-store.js';
+
+const menuStore = useMenuStore();
 
 const nutriMap = global.nutriMap;
-const nutriStateList = ref(Object.keys(nutriMap).map(k => ({[k]: 0})));
+const nutriStateVal = {}
+Object.keys(nutriMap).forEach(k => {
+  nutriStateVal[k] = 0;
+})
+const nutriState = ref(nutriStateVal);
 const foodExcept = ref(new Set(["香菜", "辣椒", "海鲜"]));
 const selectedFoodExcept = ref(new Set());
 const inputDialog = ref(null);
 
+/*-------- tag操作相关开始 ---------*/
 const onClickFoodExceptTag = (food, idx) => {
   if (foodExcept.value.size === idx) {
     inputDialog.value.open();
@@ -73,6 +85,53 @@ const dialogInputConfirm = (val) => {
 		console.log('Now foodExcept:', foodExcept.value);
 	}
 };
+/*-------- tag操作相关结束 ---------*/
+
+const menuTestJson = import('@/static/menu2.test.json'); 
+
+const onClickCook = async () => {
+  const nutri_increase = [];
+  const nutri_decrease = [];
+  Object.keys(nutriState.value).forEach(k => {
+    const state = nutriState.value[k];
+    if (state === 1) {
+      nutri_increase.push(nutriMap[k]);
+    } else if (state === -1) {
+      nutri_decrease.push(nutriMap[k]);
+    }
+  });
+  console.log('营养增量:', nutri_increase);
+  console.log('营养减量:', nutri_decrease);
+  uni.showLoading({
+    title: '正在为您烹饪...'
+  });
+  try {
+    // const res = await utils.reqData({
+    //   url: '/api/menu/nutritionist-cook',
+    //   method: 'POST',
+    //   payload: {
+    //     nutri_increase: nutri_increase.join(','),
+    //     nutri_decrease: nutri_decrease.join(','),
+    //     food_avoid: Array.from(selectedFoodExcept.value).join(',')
+    //   }
+    // });
+    // console.log('Cooking with nutritionist preferences...', await menuTestJson);
+    const res = await menuTestJson;
+    uni.hideLoading();
+    menuStore.menu2Data.value = res.recipes;
+		uni.navigateTo({
+			url: '/pages/menu/menu2'
+		});
+    console.log('Cook API Response:', res);
+  } catch (err) {
+    uni.hideLoading();
+		uni.showToast({
+			title: '烹饪失败，请重试',
+			icon: 'none'
+		});
+		return;
+  }
+}
 
 </script>
 
@@ -94,7 +153,7 @@ const dialogInputConfirm = (val) => {
 .nutri-default {
   margin-bottom: 50rpx;
   .content {
-    height: 450rpx;
+    height: 580rpx;
     flex-wrap: wrap;
   }
 }
