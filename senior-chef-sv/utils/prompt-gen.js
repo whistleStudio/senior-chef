@@ -7,8 +7,12 @@ function generateFridgePrompt(input) {
 
 // 营养专家
 function generateNutritionistPrompt({nutri_increase="", nutri_decrease="", food_avoid=""}={}) {
-  return `根据以下输入生成菜品 (1~3 道), 并返回 JSON. 输入字段: nutri_increase (需要增加的营养素): ${nutri_increase}, nutri_decrease (需要减少的营养素): ${nutri_decrease} avoid_foods (需要避免的食物): ${food_avoid}
-要求: 生成菜名、食材(明确用量)、步骤(4-7步). 不包含 avoid_foods. 仅对输入的营养素返回 nutrients: { "营养素名": { "amount": "", "nrv": "" } }, 计算值基于菜品总量. 输出必须是纯 JSON.
+  let prompt_part1 = nutri_increase ? `增加${nutri_increase}摄入，` : "";
+  let prompt_part2 = nutri_decrease ? `减少${nutri_decrease}摄入，` : "";
+  let prompt_part3 = food_avoid ? `避免包含${food_avoid}。` : "";
+  let prompt_part1_3 = prompt_part1 + prompt_part2 + prompt_part3;
+  return `输入: nutri_increase: ${nutri_increase}, nutri_decrease: ${nutri_decrease} avoid_foods: ${food_avoid}.
+要求: 生成菜品 (2道)、菜品都需${prompt_part1_3} 食材明确用量. 步骤(4-7步). 仅对输入的营养素返回 nutrients: { "营养素名": { "amount": "", "nrv": "" } }, 计算值基于菜品总量. 输出必须是纯 JSON.
 格式: { "recipes": [ { "name": "", "ingredients": [{"name": "", "amount": ""}], "steps": [], "nutrients": { "营养素名": { "amount": "", "nrv": "" } } } ] }`
 }
 

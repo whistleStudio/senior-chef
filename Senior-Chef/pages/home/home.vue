@@ -148,11 +148,19 @@ const onClickCook = async () => {
 		// 	}
 		// })
 		uni.hideLoading();
-		uni.showToast({
-			title: `烹饪完成！}`,
-			icon: 'success',
-			duration: 1000
-		});
+		const res = await menuTestJson; // 测试用
+		if (res && res.err === 0) {
+			menuStore.menuData.value = res.data;
+			uni.navigateTo({
+				url: '/pages/menu/menu'
+			});
+		} else {
+			uni.showToast({
+				title: res.msg || '烹饪失败，请重试',
+				icon: 'none'
+			});
+		}
+		console.log('Cook Response:', res);
 	} catch (error) {
 		uni.hideLoading();
 		uni.showToast({
@@ -161,19 +169,7 @@ const onClickCook = async () => {
 		});
 		return;
 	}
-	const res = await menuTestJson;
-	console.log('Cook Response:', res);
-	if (res && res.err === 0) {
-		menuStore.menuData.value = res.data;
-		uni.navigateTo({
-			url: '/pages/menu/menu'
-		});
-	} else {
-		uni.showToast({
-			title: res.message || '烹饪失败，请重试',
-			icon: 'none'
-		});
-	}
+
 }
 
 watch(selectedDefaultFood.value, (newVal) => {

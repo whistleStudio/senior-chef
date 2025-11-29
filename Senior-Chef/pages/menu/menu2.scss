@@ -40,16 +40,13 @@ $shadow-color: rgba(43, 43, 43, 0.06);
 /* 营养信息 */
 .nutrition {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
+  justify-content: flex-start !important;
   gap: 12rpx;
   margin-bottom: 16rpx;
   flex-wrap: wrap;
 }
 
 .nutrition-item {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
   background: #f8f8f8;
   border-radius: 14rpx;
@@ -117,7 +114,7 @@ $shadow-color: rgba(43, 43, 43, 0.06);
   border-radius: 12rpx;
   padding: 12rpx;
   margin-bottom: 10rpx;
-  align-items: flex-start;
+  align-items: flex-start !important;
   text-align: left;
 }
 

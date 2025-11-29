@@ -44,15 +44,12 @@
 </template>
 
 <script setup>
-import { reactive, toRefs } from 'vue'
+import { ref } from 'vue'
 import { useMenuStore } from '../../store/menu-store'
 
 const menuStore = useMenuStore()
 
-// 把 JSON 数据放入响应式对象，便于后续扩展（过滤、搜索等）
-const state = reactive({
-  recipes: menuStore.menu2Data.value
-})
+const recipes = ref(menuStore.menu2Data.value.recipes || [])
 
 // 辅助：在模板中不能直接用 Object.entries 的结果解构为响应式的遍历，暴露一个小函数
 function objectEntries(obj) {
@@ -60,7 +57,7 @@ function objectEntries(obj) {
   return Object.entries(obj)
 }
 
-const { recipes } = toRefs(state)
+// const { recipes } = toRefs(state)
 </script>
 
 <style lang="scss" src="./menu2.scss"></style>

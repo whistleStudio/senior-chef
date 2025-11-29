@@ -106,22 +106,34 @@ const onClickCook = async () => {
     title: '正在为您烹饪...'
   });
   try {
-    // const res = await utils.reqData({
-    //   url: '/api/menu/nutritionist-cook',
-    //   method: 'POST',
-    //   payload: {
-    //     nutri_increase: nutri_increase.join(','),
-    //     nutri_decrease: nutri_decrease.join(','),
-    //     food_avoid: Array.from(selectedFoodExcept.value).join(',')
-    //   }
-    // });
-    // console.log('Cooking with nutritionist preferences...', await menuTestJson);
-    const res = await menuTestJson;
+    const res = await utils.reqData({
+      url: '/api/menu/nutritionist-cook',
+      method: 'POST',
+      payload: {
+        nutri_increase: nutri_increase.join(','),
+        nutri_decrease: nutri_decrease.join(','),
+        food_avoid: Array.from(selectedFoodExcept.value).join(',')
+      }
+    });
     uni.hideLoading();
-    menuStore.menu2Data.value = res.recipes;
-		uni.navigateTo({
-			url: '/pages/menu/menu2'
-		});
+    if (res && res.err === 0) {
+      menuStore.menu2Data.value = res.data;
+      uni.navigateTo({
+        url: '/pages/menu/menu2'
+      });
+    } else {
+      uni.showToast({
+        title: res.msg || '烹饪失败，请重试',
+        icon: 'none'
+      });
+    }
+    /* -----------测试用开始-------------- */
+    // const res = await menuTestJson; 
+    // menuStore.menu2Data.value = res;
+		// uni.navigateTo({
+		// 	url: '/pages/menu/menu2'
+		// });
+    /* -----------测试用结束-------------- */
     console.log('Cook API Response:', res);
   } catch (err) {
     uni.hideLoading();
@@ -137,7 +149,7 @@ const onClickCook = async () => {
 
 <style scoped lang="scss">
 .nutritionist {
-  padding: 50rpx 30rpx;
+  padding: 50rpx 30rpx 0;
 }
 
 .title {

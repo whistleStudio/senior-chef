@@ -1,0 +1,142 @@
+.mystic {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  font-family: 'Serif', 'Georgia', serif;
+  /* 背景渐变：深紫到黑色 */
+  background: radial-gradient(circle at 50% 50%, #2c003e, #000000 80%);
+  overflow: hidden;
+  color: #fff;
+  // justify-content: flex-start;
+  .title {
+    opacity: 0.5;
+    font-size: 35rpx;
+    font-weight: bold;
+    text-align: center;
+    // margin-top: 100rpx;
+  }
+  .step {
+    margin-bottom: 40rpx;
+  }
+  .step-1, .step-2 {
+    text-align: center;
+    // font-weight: bold;
+    font-size: 45rpx;
+    opacity: 0.9;
+    margin-top: 50rpx;
+    width: 75%;
+    gap: 40rpx;
+    .step-title {
+      font-style: italic;
+    }
+    .question {
+      width: 100%;
+      height: 70rpx;
+      border-radius: 20rpx;
+      background-color: #ffffff33;
+      line-height: 70rpx;
+      font-size: 36rpx;
+    }
+    .step-desc {
+      font-size: 30rpx;
+      line-height: 44rpx;
+      opacity: 0.9;
+      font-weight: bold;
+    }
+  }
+  .next {
+    font-size: 40rpx;
+    animation: blink 1.5s infinite;
+    cursor: pointer;
+  }
+  .reset {
+    position: fixed;
+    bottom: 80rpx;
+    // right: 40rpx;
+    cursor: pointer;
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+/* 星光粒子 */
+.mystic::before {
+  content: '';
+  position: fixed;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background: transparent;
+  box-shadow: 
+    50px 100px #fff,
+    150px 200px #fff,
+    300px 50px #fff,
+    400px 400px #fff,
+    600px 300px #fff,
+    700px 150px #fff,
+    900px 500px #fff,
+    1000px 100px #fff;
+  border-radius: 50%;
+  animation: twinkle 5s linear infinite;
+}
+
+/* 星光闪烁动画 */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* 占卜牌容器 */
+.tarot {
+  perspective: 1000rpx; /* 3D 透视 */
+}
+
+.tarot-card {
+  width: 120rpx;
+  height: 200rpx;
+  margin: 0 20rpx;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.3);
+  font-size: 25rpx;
+  font-weight: bold;
+  cursor: pointer;
+
+  /* 翻牌动画 */
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+  position: relative;
+}
+
+/* 翻转时旋转180度 */
+.tarot-card.flipped {
+  transform: rotateY(180deg);
+}
+
+/* 卡牌正反面 */
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 20rpx;
+  backface-visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+/* 正面样式 */
+.card-front {
+  background: linear-gradient(135deg, #6a0dad, #ff69b4);
+}
+
+/* 背面样式 */
+.card-back {
+  background: #333;
+  transform: rotateY(180deg);
+}
