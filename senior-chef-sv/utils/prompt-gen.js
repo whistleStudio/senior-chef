@@ -16,8 +16,16 @@ function generateNutritionistPrompt({nutri_increase="", nutri_decrease="", food_
 格式: { "recipes": [ { "name": "", "ingredients": [{"name": "", "amount": ""}], "steps": [], "nutrients": { "营养素名": { "amount": "", "nrv": "" } } } ] }`
 }
 
+// 占卜大师
+function generateTarotPrompt({question="", tarotCards=["", "", ""]}={}) {
+  return `输入: question: ${question}, tarotCards: ${tarotCards}.
+要求: 根据question和tarotCards进行占卜分析, 生成菜品(2道), 菜品需明确食材用量, 步骤(4-7步); 占卜采取塔罗78张牌的三角阵牌型(仅正位), 过去、现在、未来分别对应tarotCards数组的三张牌. 对占卜结果进行分析analysis(<150字). 对菜品能够解决或缓解问题的原因功效进行阐述effect(<100字). 输出必须是纯JSON.
+格式: { "analysis": "", "recipes": [ { "name": "", "ingredients": [{"name": "", "amount": ""}], "effect":"", "steps": [] } ] }`
+}
+
 
 module.exports = {
   generateFridgePrompt,
-  generateNutritionistPrompt
+  generateNutritionistPrompt,
+  generateTarotPrompt
 };

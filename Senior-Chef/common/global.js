@@ -69,7 +69,7 @@ export default {
     "Na": "钠",                   "Cu": "铜",                 "Mn": "锰",
     "Se": "硒",                   "I": "碘"
   },
-
+  tarotCardBaseUrl: "https://assets.whistlestudio.cn/senior-chef/tarot/",
   tarotList: [
     "愚者", "魔术师", "女祭司", "皇后", "皇帝", "教皇", "恋人", "战车",
     "力量", "隐士", "命运之轮", "正义", "吊人", "死神", "节制",

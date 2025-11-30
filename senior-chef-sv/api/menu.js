@@ -1,7 +1,7 @@
 const express = require('express');
 const rt = express.Router();
 const { OpenAI } = require("openai");
-const { generateFridgePrompt, generateNutritionistPrompt } = require('../utils/prompt-gen');
+const { generateFridgePrompt, generateNutritionistPrompt, generateTarotPrompt } = require('../utils/prompt-gen');
 
 // qwen3-vl-flash qwen-flash
 const openai = new OpenAI(
@@ -47,6 +47,21 @@ rt.post("/nutritionist-cook", (req, res) => {
     }
   })()
 });
+
+rt.post("/tarot-cook", (req, res) => {
+  console.log("original tarot-cook req.body: ", req.body);
+  ;(async () => {
+    try {
+      const prompt = generateTarotPrompt(req.body || {});
+      const aiResponse = await askAi(prompt);
+      if (aiResponse) res.json({err: 0, data: aiResponse });
+      else res.json({ err: 2, msg: "Response not match rules" });
+    } catch (error) {
+      console.error("Error /tarot-cook:", error);
+      res.json({ err: 1, msg: "AI communication error" });
+    }
+  })()
+})
 
 
 // 大模型请求

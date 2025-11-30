@@ -12,18 +12,24 @@
         <view class="flex-col-center tarot-card" :class="{ flipped: card.flipped }" v-for="(card, idx) in tarotCards" :key="idx"
         @click="onClickCard(idx)">
           <view class="card-front">{{ card.label }}</view>
-          <view class="card-back" :style="genTarotCardStyle()">🃏</view>
+          <view class="card-back" :style="genTarotCardStyle(idx)"></view>
         </view>
       </view>
     </view>
     <view class="next" v-if="isNextShow" @click="onClickNext">{{ `>>>` }}</view>
     <uni-icons class="reset" @click="onClickReset" type="reload" color="#ffffff88" size="35"/>
+    <!-- 预览大图层 -->
+    <view class="preview flex-col-center" v-if="previewVisible" @click="closePreview">
+      <image class="preview-img" :src="previewSrc" mode="aspectFit" />
+      <text class="preview-text">{{ tarotCards[previewIndex].val }}</text>
+    </view>
   </view>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed } from 'vue';
 import global from '../../common/global';
+import utils from '../../common/utils.js';
 
 const placeholderStyle = `color: #ffffff99;`;
 const step = ref(1);
@@ -32,6 +38,9 @@ const isNextShow = computed(() => {
   if (step.value === 1) {
     return question.value.trim().length > 0;
   } else if (step.value === 2) {
+    for (let v of tarotCards.value) {
+      if (!v.flipped) return false;
+    }
     return true;
   }
   return false;
@@ -42,22 +51,72 @@ const tarotCards = ref([
   {label: "未来", val: "", flipped: false},
 ]);
 const tarotList = global.tarotList;
-const genTarotCardStyle = () => {
+const tarotCardBaseUrl = global.tarotCardBaseUrl;
+const genTarotCardStyle = (idx) => {
   return {
-    backgroundColor: 'red'
+    backgroundImage: tarotCards.value[idx].val ? `url(${tarotCardBaseUrl}/${tarotCards.value[idx].val}.webp)` : '',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
   };
 };
-// 翻牌
+// 预览状态
+const previewVisible = ref(false);
+const previewIndex = ref(null);
+const previewSrc = computed(() => {
+  if (previewIndex.value === null) return '';
+  const val = tarotCards.value[previewIndex.value].val;
+  return val ? `${tarotCardBaseUrl}/${val}.webp` : '';
+});
+
+// 点击卡牌：若未翻则翻牌；已翻则打开大图预览（如果有图片）
 const onClickCard = (idx) => {
-  tarotCards.value[idx].flipped = true;
+  const card = tarotCards.value[idx];
+  if (!card.flipped) {
+    card.flipped = true;
+  } else {
+    // 已经翻开，显示大图（如果 val 存在）
+    if (card.val) {
+      previewIndex.value = idx;
+      previewVisible.value = true;
+    }
+  }
 };
+
+// 关闭预览
+const closePreview = () => {
+  previewVisible.value = false;
+  previewIndex.value = null;
+};
+
 // 下一步
-const onClickNext = () => {
+const onClickNext = async () => {
   if (step.value === 1) {
     step.value = 2;
-    getRandomTarotCards();
+    getRandomTarotCards(); // 获取随机卡牌
   } else if (step.value === 2) {
-
+    // 菜谱生成
+    try {
+      uni.showLoading({
+        title: '正在为您占卜...'
+      });
+      const res = await utils.reqData({
+        url: '/api/menu/tarot-cook',
+        method: 'POST',
+        payload: {
+          question: question.value,
+          tarotCards: tarotCards.value.map(card => card.val)
+        }
+      });
+      uni.hideLoading();
+      console.log('Mystic Cook Response:', res.data);
+    } catch (err) {
+      uni.hideLoading();
+      uni.showToast({
+        title: '占卜失败，请重试',
+        duration: 1000
+      });
+      console.error('Show loading failed:', err);
+    }
   }
 };
 // 重置
