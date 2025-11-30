@@ -11,8 +11,8 @@
       <view class="flex-row-center tarot">
         <view class="flex-col-center tarot-card" :class="{ flipped: card.flipped }" v-for="(card, idx) in tarotCards" :key="idx"
         @click="onClickCard(idx)">
-          <div class="card-front">{{ card.label }}</div>
-          <div class="card-back">🃏</div>
+          <view class="card-front">{{ card.label }}</view>
+          <view class="card-back" :style="genTarotCardStyle()">🃏</view>
         </view>
       </view>
     </view>
@@ -22,7 +22,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import global from '../../common/global';
 
 const placeholderStyle = `color: #ffffff99;`;
 const step = ref(1);
@@ -40,6 +41,12 @@ const tarotCards = ref([
   {label: "现在", val: "", flipped: false},
   {label: "未来", val: "", flipped: false},
 ]);
+const tarotList = global.tarotList;
+const genTarotCardStyle = () => {
+  return {
+    backgroundColor: 'red'
+  };
+};
 // 翻牌
 const onClickCard = (idx) => {
   tarotCards.value[idx].flipped = true;
@@ -48,6 +55,7 @@ const onClickCard = (idx) => {
 const onClickNext = () => {
   if (step.value === 1) {
     step.value = 2;
+    getRandomTarotCards();
   } else if (step.value === 2) {
 
   }
@@ -62,6 +70,29 @@ const onClickReset = () => {
   // 重新请求卡牌，考虑增加些loading, 以减少调用频率
 };
 
+/* --------------------------- */
+// 随机获取三张塔罗牌
+function getRandomTarotCards() {
+  const selectedCards = new Set();
+  while (selectedCards.size < 3) {
+    const randIdx = Math.floor(Math.random() * tarotList.length);
+    selectedCards.add(tarotList[randIdx]);
+  }
+  const cards = Array.from(selectedCards);
+  console.log('Selected Tarot Cards:', cards);
+  tarotCards.value.forEach((card, idx) => {
+    card.val = cards[idx];
+  });
+};
+
+/* ---------------------------- */
+// onMounted(() => {
+//   console.log('Mystic mounted');
+//   const cards = getRandomTarotCards();
+//   tarotCards.value.forEach((card, idx) => {
+//     card.val = cards[idx];
+//   });
+// });
 </script>
 
 <style src="./mystic.scss" scoped lang="scss"></style>
