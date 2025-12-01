@@ -29,12 +29,15 @@ $shadow-color: rgba(43, 43, 43, 0.06);
   box-shadow: 0 8rpx 30rpx $shadow-color;
 }
 
-.dish-name {
+.recipe-name {
   font-size: 40rpx;
   color: $text-color;
   font-weight: 700;
   margin-bottom: 18rpx;
   letter-spacing: 0.5rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 /* 营养信息 */
@@ -60,7 +63,7 @@ $shadow-color: rgba(43, 43, 43, 0.06);
 }
 
 .nutrition-key {
-  font-size: 22rpx;
+  font-size: 20rpx;
   color: $muted;
 }
 

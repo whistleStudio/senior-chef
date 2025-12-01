@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const PORT = 8083;
 const menuApi = require('./api/menu');
+const userApi = require('./api/user');
+require('./db/connect');
 
 
 // CORS(小程序用)
@@ -15,6 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // API 路由
 app.use('/api/menu', menuApi);
+app.use('/api/user', userApi);
 
 
 app.listen(PORT, () => {

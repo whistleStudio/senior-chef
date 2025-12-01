@@ -51,7 +51,7 @@ export default {
   nutriMap: {
     /* --- 宏量营养素 --- */
     "energy_kcal": "能量",  "protein": "蛋白质",      "fat": "脂肪",
-    "carbohydrate": "碳水化合物",   "fiber": "膳食纤维",       "cholesterol": "胆固醇",
+    "carbohydrate": "碳水",   "fiber": "膳食纤维",       "cholesterol": "胆固醇",
 
     /* --- 维生素 --- */
     "v_a": "维生素A",              "v_b1": "维生素B1",         "v_b2": "维生素B2",

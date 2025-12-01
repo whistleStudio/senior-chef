@@ -4,6 +4,8 @@
 **/unpackage
 /dist
 **/*.7z
+private-data.json
+
 
 # local env files
 .env.local

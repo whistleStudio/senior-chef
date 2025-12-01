@@ -42,6 +42,7 @@ import global from '@/common/global.js';
 import utils from '@/common/utils.js';
 import { useMenuStore } from '@/store/menu-store.js';
 
+
 const foodList = global.foodList;
 const selectedDefaultFood = ref(new Set());
 const customFood = ref(new Set());
@@ -150,7 +151,8 @@ const onClickCook = async () => {
 		uni.hideLoading();
 		const res = await menuTestJson; // 测试用
 		if (res && res.err === 0) {
-			menuStore.menuData.value = res.data;
+			menuStore.menuData = res.data;
+			console.log("菜单页数据已更新:", res.data)
 			uni.navigateTo({
 				url: '/pages/menu/menu'
 			});

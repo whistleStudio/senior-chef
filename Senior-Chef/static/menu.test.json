@@ -1,89 +1,50 @@
 {
-    "err": 0,
-    "data": {
-        "filtered_foods": [
-            "苦瓜",
-            "番茄"
+  "err": 0,
+  "data": {
+    "filtered_foods": ["苦瓜", "辣椒"],
+    "recipes": [
+      {
+        "name": "清炒苦瓜",
+        "ingredients": [
+          { "name": "苦瓜", "amount": "300克" },
+          { "name": "辣椒", "amount": "50克" }
         ],
-        "dishes": [
-            {
-                "name": "清炒苦瓜",
-                "ingredients": [
-                    {
-                        "name": "苦瓜",
-                        "amount": "300克"
-                    },
-                    {
-                        "name": "番茄",
-                        "amount": "150克"
-                    },
-                    {
-                        "name": "食用油",
-                        "amount": "10毫升"
-                    },
-                    {
-                        "name": "盐",
-                        "amount": "2克"
-                    }
-                ],
-                "steps": [
-                    "苦瓜洗净，去瓤切片；番茄洗净切块。",
-                    "热锅倒油，放入苦瓜片中火煸炒至微软。",
-                    "加入番茄块继续翻炒至软烂出汁。",
-                    "调入盐，翻炒均匀后即可出锅。"
-                ],
-                "nutrition": {
-                    "energy_kcal": 85,
-                    "protein_g": 3.2,
-                    "fat_g": 4.5,
-                    "carbohydrate_g": 7.8
-                },
-                "nrv": {
-                    "energy": 4,
-                    "protein": 6,
-                    "fat": 7,
-                    "carbohydrate": 3
-                }
-            },
-            {
-                "name": "番茄苦瓜汤",
-                "ingredients": [
-                    {
-                        "name": "苦瓜",
-                        "amount": "200克"
-                    },
-                    {
-                        "name": "番茄",
-                        "amount": "250克"
-                    },
-                    {
-                        "name": "清水",
-                        "amount": "800毫升"
-                    },
-                    {
-                        "name": "盐",
-                        "amount": "3克"
-                    }
-                ],
-                "steps": [
-                    "苦瓜去瓤切块，番茄切块备用。",
-                    "锅中加水烧开，放入苦瓜块煮约3分钟。",
-                    "加入番茄块继续煮5分钟至软烂。",
-                    "调入盐，搅拌均匀后关火。"
-                ],
-                "nutrition": {
-                    "energy_kcal": 62,
-                    "protein_g": 2.5,
-                    "fat_g": 1.2,
-                    "carbohydrate_g": 12.3
-                },
-                "nrv": {
-                    "energy": 3,
-                    "protein": 5,
-                    "fat": 2,
-                    "carbohydrate": 4
-                }
-            }
-        ]
-    }
+        "steps": [
+          "苦瓜洗净，去瓤切片；辣椒切丝。",
+          "热锅凉油，放入辣椒丝煸香。",
+          "加入苦瓜片翻炒至断生。",
+          "调入适量盐，翻炒均匀。",
+          "继续炒至苦瓜微软，出锅装盘。"
+        ],
+        "nutrients": {
+          "能量": { "amount": "18.6kcal", "nrv": "1%" },
+          "蛋白质": { "amount": "2.1g", "nrv": "4%" },
+          "脂肪": { "amount": "0.6g", "nrv": "1%" },
+          "碳水": { "amount": "15.2g", "nrv": "5%" }
+        }
+      },
+      {
+        "name": "苦瓜炒辣椒",
+        "ingredients": [
+          { "name": "苦瓜", "amount": "250克" },
+          { "name": "辣椒", "amount": "60克" },
+          { "name": "蒜末", "amount": "5克" }
+        ],
+        "steps": [
+          "苦瓜去瓤切片，辣椒切段。",
+          "热锅加油，爆香蒜末。",
+          "下辣椒段大火快炒至表皮微皱。",
+          "加入苦瓜片翻炒均匀。",
+          "加盐调味，炒至熟透。",
+          "撒少许鸡精（可选），迅速翻炒后出锅。"
+        ],
+        "nutrients": {
+          "能量": { "amount": "20.3kcal", "nrv": "1%" },
+          "蛋白质": { "amount": "2.3g", "nrv": "5%" },
+          "脂肪": { "amount": "0.7g", "nrv": "1%" },
+          "碳水": { "amount": "16.5g", "nrv": "6%" }
+        }
+      }
+    ]
+  }
 }

@@ -30,6 +30,9 @@
 import { ref, computed } from 'vue';
 import global from '../../common/global';
 import utils from '../../common/utils.js';
+import { useMenuStore } from '../../store/menu-store';
+
+const menuStore = useMenuStore();
 
 const placeholderStyle = `color: #ffffff99;`;
 const step = ref(1);
@@ -88,6 +91,8 @@ const closePreview = () => {
   previewIndex.value = null;
 };
 
+
+const menuTestJson = import('@/static/menu3.test.json');  // 测试用
 // 下一步
 const onClickNext = async () => {
   if (step.value === 1) {
@@ -99,16 +104,34 @@ const onClickNext = async () => {
       uni.showLoading({
         title: '正在为您占卜...'
       });
-      const res = await utils.reqData({
-        url: '/api/menu/tarot-cook',
-        method: 'POST',
-        payload: {
-          question: question.value,
-          tarotCards: tarotCards.value.map(card => card.val)
-        }
-      });
+      // const res = await utils.reqData({
+      //   url: '/api/menu/tarot-cook',
+      //   method: 'POST',
+      //   payload: {
+      //     question: question.value,
+      //     tarotCards: tarotCards.value.map(card => card.val)
+      //   }
+      // });
       uni.hideLoading();
-      console.log('Mystic Cook Response:', res.data);
+      /* ---------测试开始----------- */
+      const data = await menuTestJson;
+      menuStore.menu3Data = data;
+      uni.navigateTo({
+        url: '/pages/menu/menu3'
+      });
+      /* ---------测试结束----------- */
+      // if (res && res.err === 0) {
+      //   menuStore.menu3Data = res.data;
+      //   uni.navigateTo({
+      //      url: '/pages/menu/menu3'  // 占位，后续改为菜谱详情页;
+      //   });
+      // } else {
+      //   uni.showToast({
+      //     title: '占卜失败，请重试',
+      //     duration: 1000
+      //   });
+      // }
+      // console.log('Mystic Cook Response:', res.data);
     } catch (err) {
       uni.hideLoading();
       uni.showToast({

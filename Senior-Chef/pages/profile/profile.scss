@@ -1,0 +1,141 @@
+/* 整体容器 */
+.container {
+  background: #f9fbfb;
+  min-height: 100%;
+  padding: 40rpx 20rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+/* 头部 */
+.profile-header {
+  background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+  border-radius: 20rpx;
+  padding: 28rpx 20rpx;
+  align-items: center;
+  box-shadow: 0 8rpx 30rpx rgba(43, 43, 43, 0.06);
+}
+
+.avatar {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 70rpx;
+  margin-bottom: 14rpx;
+  border: 4rpx solid rgba(255,255,255,0.6);
+  background: #fff;
+}
+
+.nickname {
+  font-size: 34rpx;
+  color: #2b2b2b;
+  font-weight: 700;
+  margin-bottom: 6rpx;
+}
+
+.subtext {
+  font-size: 22rpx;
+  color: #7b7b7b;
+}
+
+/* 内容项 */
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.profile-item {
+  background: #ffffff;
+  border-radius: 14rpx;
+  padding: 18rpx;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 6rpx 20rpx rgba(43, 43, 43, 0.03);
+}
+
+/* hover / active 效果（uni-app 的 hover-class 会使用） */
+.item-hover {
+  background: linear-gradient(90deg, rgba(231,255,246,0.6), rgba(255,233,240,0.6));
+}
+
+/* 左侧区域 */
+.item-left {
+  gap: 18rpx;
+  align-items: center;
+}
+
+.item-icon {
+  width: 45rpx;
+  height: 45rpx;
+  border-radius: 10rpx;
+  object-fit: cover;
+  margin-right: 20rpx;
+}
+
+/* 文案 */
+.item-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-label {
+  font-size: 28rpx;
+  color: #2b2b2b;
+  font-weight: 600;
+}
+
+.item-desc {
+  font-size: 20rpx;
+  color: #9b9b9b;
+  margin-top: 4rpx;
+}
+
+/* 底部区域（退出登录） */
+.bottom-area {
+  margin-top: 20rpx;
+  display: flex;
+  justify-content: center;
+}
+
+.logout-btn {
+  width: 80%;
+  background: linear-gradient(90deg, #ffecf0 0%, #e7fff6 100%);
+  border-radius: 14rpx;
+  padding: 14rpx 0;
+  font-size: 26rpx;
+  color: #2b2b2b;
+  border: none;
+}
+
+/* 工具类（保持与其他页面一致的布局风格） */
+.flex-col-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-row-center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+}
+
+.flex-row-space-between {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* 小屏适配 */
+@media (max-width: 360px) {
+  .avatar { width: 120rpx; height: 120rpx; border-radius: 60rpx; }
+  .nickname { font-size: 30rpx; }
+  .item-label { font-size: 26rpx; }
+}
