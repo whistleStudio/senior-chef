@@ -115,15 +115,15 @@ const onClickNext = async () => {
       uni.hideLoading();
       /* ---------测试开始----------- */
       const data = await menuTestJson;
-      menuStore.menu3Data = data;
+      menuStore.menuData = data;
       uni.navigateTo({
-        url: '/pages/menu/menu3'
+        url: '/pages/menu/menu'
       });
       /* ---------测试结束----------- */
       // if (res && res.err === 0) {
-      //   menuStore.menu3Data = res.data;
+      //   menuStore.menuData = res.data;
       //   uni.navigateTo({
-      //      url: '/pages/menu/menu3'  // 占位，后续改为菜谱详情页;
+      //      url: '/pages/menu/menu'  // 占位，后续改为菜谱详情页;
       //   });
       // } else {
       //   uni.showToast({

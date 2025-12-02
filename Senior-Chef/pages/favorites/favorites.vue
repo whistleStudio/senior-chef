@@ -3,6 +3,7 @@
     <view class="fav-list">
       <view
         class="fav-card flex-row-space-between"
+        :class="getBgColorClass(dish.cate)"
         v-for="(dish, idx) in collections"
         :key="dish.name + idx"
         @click="onClickDish(dish)"
@@ -42,19 +43,41 @@ function onClickDish(dish) {
   if (!dish || !dish.name) return
 	userStore.currentRecipe = dish; // 设置当前菜品
   uni.navigateTo({
-    url: `/pages/recipe/recipe`
+    url: `/pages/dish/dish`
   })
 }
+
+function getBgColorClass(cate) {
+	switch (cate) {
+		case 1:
+			return 'fav-card-b'
+		case 2:
+			return 'fav-card-c'
+		default:
+			return 'fav-card-a'
+	}
+}
+
 </script>
 
 <style scoped lang="scss">
 $fav-bg: #f9fbfb;
-$card-start: #ffffff;
-$card-end: #f7fbff;
+// $card-start: #ffffff;
+// $card-end: #f7fbff;
 $text-color: #2b2b2b;
 $muted: #7b7b7b;
 $shadow: rgba(43, 43, 43, 0.06);
 $accent: #e7fff6;
+
+/* 分类专用淡色渐变 */
+$card-a-start: #e6f0ff; // 淡蓝
+$card-a-end: #f7fbff;
+
+$card-b-start: #ffe6f0; // 淡粉
+$card-b-end: #fff7fb;
+
+$card-c-start: #f0e6ff; // 淡紫
+$card-c-end: #f7f0ff;
 
 .fav-container {
   background: $fav-bg;
@@ -71,13 +94,26 @@ $accent: #e7fff6;
 
 /* 收藏卡片样式 */
 .fav-card {
-  background: linear-gradient(180deg, $card-start 0%, $card-end 100%);
+  // background: linear-gradient(180deg, $card-start 0%, $card-end 100%);
   border-radius: 18rpx;
   padding: 20rpx;
   box-shadow: 0 8rpx 30rpx $shadow;
   align-items: center;
   justify-content: space-between;
   gap: 12rpx;
+}
+
+/* 分类渐变 */
+.fav-card-a {
+  background: linear-gradient(180deg, $card-a-start 0%, $card-a-end 100%);
+}
+
+.fav-card-b {
+  background: linear-gradient(180deg, $card-b-start 0%, $card-b-end 100%);
+}
+
+.fav-card-c {
+  background: linear-gradient(180deg, $card-c-start 0%, $card-c-end 100%);
 }
 
 /* 左侧简介 */

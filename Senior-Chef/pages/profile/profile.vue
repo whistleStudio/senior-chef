@@ -3,11 +3,11 @@
     <view class="profile-header flex-col-center">
       <image
         class="avatar"
-        :src="userStore.userInfo.avatar || '/static/tab-bar/chef-f.png'"
+        :src="'/static/tab-bar/chef-f.png'"
         mode="aspectFill"
       ></image>
       <text class="nickname">{{ userStore.userInfo.nickname || '游客' }}</text>
-      <text class="subtext" v-if="userStore.userInfo.bio">{{ userStore.userInfo.bio }}</text>
+      <!-- <text class="subtext" v-if="userStore.userInfo.bio">{{ userStore.userInfo.bio }}</text> -->
     </view>
 
     <view class="profile-content">

@@ -56,6 +56,15 @@
 			console.log('App Launch')
 			userStore = useUserStore();
 			wxLogin();
+			// #ifdef WEB
+			utils.reqData({
+				url: '/api/user/login',
+				method: 'POST',
+				payload: {
+					code: 'test-code'
+				}
+			}).then(res => {console.log('App test login response:', res)})
+			// #endif
 		},
 		onShow: function() {
 			console.log('App Show')

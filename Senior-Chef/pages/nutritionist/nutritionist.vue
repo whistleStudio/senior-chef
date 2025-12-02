@@ -117,9 +117,9 @@ const onClickCook = async () => {
     // });
     uni.hideLoading();
     // if (res && res.err === 0) {
-    //   menuStore.menu2Data = res.data;
+    //   menuStore.menuData = res.data;
     //   uni.navigateTo({
-    //     url: '/pages/menu/menu2'
+    //     url: '/pages/menu/menu'
     //   });
     // } else {
     //   uni.showToast({
@@ -129,9 +129,9 @@ const onClickCook = async () => {
     // }
     /* -----------测试用开始-------------- */
     const res = await menuTestJson; 
-    menuStore.menu2Data = res;
+    menuStore.menuData = res;
 		uni.navigateTo({
-			url: '/pages/menu/menu2'
+			url: '/pages/menu/menu?cate=1'
 		});
     /* -----------测试用结束-------------- */
     console.log('Cook API Response:', res);

@@ -4,7 +4,7 @@ import utils from '../common/utils.js';
 
 export const useUserStore = defineStore('user', () => {
   // const openid = ref('xxxx');
-  const userInfo = ref({ openid: 'xxxx', nickname: 'Chef', gender: 0, collections: []});
+  const userInfo = ref({ openid: 'test-code', nickname: 'Chef', gender: 0, collections: []});
   const currentRecipe = ref({})
 
   // 刷新数据
@@ -45,19 +45,20 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  const removeFavDish = async ({dish={}, cate=0}={}) => {
+  const removeFavDish = async ({dish={}}={}) => {
     try {
       const res = await utils.reqData({
         url: '/api/user/removeCollections',
         method: 'POST',
         payload: {
           openid: userInfo.value.openid,
-          dish,
-          cate
+          dish
         }
       })
+      console.log('Remove favorite dish response:', res);
       if (res.err === 0) {
-        userInfo.value = res.data
+        userInfo.value.collections = res.data.collections || [];
+        console.log('Favorite dish removed. Updated collections:', userInfo.value.collections);
       }
     } catch (error) {
       console.error('Error removing favorite dish:', error);

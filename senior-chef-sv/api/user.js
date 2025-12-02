@@ -7,6 +7,19 @@ console.log('User API Config:', { APPID, APPSECRET });
 /* 登录获取用户对应的唯一openid */
 rt.post('/login', (req, res) => {
   const { code } = req.body;
+  /* --------h5测试开始----------- */
+  if ( code === "test-code" ) {
+    console.log('H5 Test Login Invoked');
+    const openid = code;
+    User.findOneAndUpdate(
+      { openid },
+      { $setOnInsert: { openid, nickname: `chef_${openid.slice(0, 6)}` } },
+      { new: true, upsert: true }
+    ).catch(error => {});
+    res.json({err:1})
+    return;
+  }
+  /* --------h5测试结束----------- */
   ;(async () => {
     const wxRes = await fetch(`https://api.weixin.qq.com/sns/jscode2session?appid=${APPID}&secret=${APPSECRET}&js_code=${code}&grant_type=authorization_code`);
     const wxData = await wxRes.json();
@@ -46,16 +59,17 @@ rt.post('/getProfile', (req, res) => {
 const maxCollectionsLength = 50; // 最大收藏数量限制
 rt.post('/addCollections', (req, res) => {
   const { openid, dish, cate } = req.body;
-  console.log('Add to Collections Request:', { openid, dish, cate });
+  console.log('Add to Collections Request:', { openid, dishName: dish.name, cate });
   ;(async () => {
     const user = await User.findOne({ openid });
     if (!user) {
       res.json({ err: 1, msg: 'User not found' });
       return;
     }
-    if (!user.collections.find(d => d.name === dish.name && d.cate === cate)) {
-      dish.cate = cate; // 添加类别信息
-      dish.dateAdded = formatToday(); // 添加收藏日期
+    const dishIdx = user.collections.findIndex(d => d.name === dish.name && d.cate === cate); // 仅比较name和cate，判断是否已收藏
+    dish.cate = cate; // 添加类别信息
+    dish.dateAdded = formatToday(); // 添加收藏日期
+    if (dishIdx === -1) {
       if (user.collections.length >= maxCollectionsLength) {
         // 超过最大收藏数量，移除最旧的收藏
         await User.updateOne(
@@ -65,10 +79,29 @@ rt.post('/addCollections', (req, res) => {
       }
       await User.updateOne(
         { openid },
-        { $push: { collections: { $each: [dish], $position: 0 } } } // 用 $push 添加
+        { $push: { collections: { $each: [dish], $position: 0 } } } // 用 $push 添加 = unshift
       );
       res.json({ err: 0 });
-    } else res.json({ err: 0 }); // 已存在则不重复添加
+    } else {
+      // 已收藏，删除旧的，新的添加至数组开头
+      await User.updateOne(
+        { openid },
+        [{ $set: { 
+          collections: {
+            $concatArrays: [
+              { $cond: [ { $gt: [dishIdx, 0] }, { $slice: ["$collections", 0, dishIdx] }, [] ] }, // $slice第三个参数需要大于0
+              { $slice: ["$collections", dishIdx+1, { $size: "$collections" }] },
+            ]
+          }
+        } }],
+        { updatePipeline: true } 
+      );
+      await User.updateOne(
+        { openid },
+        { $push: { collections: { $each: [dish], $position: 0 } } } // 用 $push 添加 = unshift
+      );
+      res.json({ err: 0 })
+    }; 
   })().catch(error => {
     console.error('Add to Collections Error:', error);
     res.json({ err: 1, msg: 'Failed to add to collections' });
@@ -77,13 +110,18 @@ rt.post('/addCollections', (req, res) => {
 
 /* 移除收藏 */
 rt.post('/removeCollections', (req, res) => {
-  const { openid, dish, cate } = req.body;
+  const { openid, dish } = req.body;
   ;(async () => {
-    await User.updateOne(
+    const user = await User.findOneAndUpdate(
       { openid },
-      { $pull: { collections: { name: dish.name, cate } } }
+      { $pull: { collections: { name: dish.name, cate: dish.cate } } },
+      { new: true }
     );
-    res.json({ err: 0 });
+    if (user) {
+      res.json({ err: 0, data: user });
+    } else {
+      res.json({ err: 1, msg: 'User not found' });
+    }
   })().catch(error => {
     console.error('Remove from Collections Error:', error);
     res.json({ err: 1, msg: 'Failed to remove from collections' });

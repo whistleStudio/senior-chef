@@ -3,15 +3,21 @@
     <view class="menu-card">
       <view class="recipe-name">
         <view class="title-row">
-          <text class="title-text">{{ recipe.name }}</text>
-          <uni-fav v-if="recipe.length > 0"
-            :checked="isFav"
-            class="favBtn"
-            @click="favClick"
-            bgColorChecked="#F7C96F"
+          <text class="title-text">{{ isSingle ? '' : recipeIdx + '. ' }}{{ recipe.name }}</text>
+					<uni-icons v-if="recipe.steps.length > 0 && isSingle"
+					type="trash" color="#fabcc3" size="28" @click="trashClick"
+					/>
+          <uni-fav v-if="recipe.steps.length > 0 && !isSingle"
+            :checked="isFav" class="favBtn" @click="favClick" bgColorChecked="#F7C96F"
           />
         </view>
         <text class="recipe-desc" v-if="recipe.description">{{ recipe.description }}</text>
+      </view>
+
+      <!-- 菜品功效说明（来自 effect 字段） -->
+      <view class="effect" v-if="recipe.effect">
+        <text class="effect-label">功效</text>
+        <text class="effect-text">{{ recipe.effect }}</text>
       </view>
 
       <!-- 营养信息 -->
@@ -55,22 +61,18 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, defineProps, toRefs } from 'vue'
 import { useUserStore } from '../../store/user-store'
 
-const userStore = useUserStore()
-
-// 当前菜谱：从 userStore.currentRecipe 获取（兼容直接对象或 ref）
-const recipe = computed(() => {
-  const r = userStore.currentRecipe
-  return (r && r.name) ? r : {
-    name: '糟糕，菜谱好像丢了',
-    description: '请返回上级页面',
-    ingredients: [],
-    steps: [],
-    nutrients: {}
-  }
+const props = defineProps({
+	recipe: { type: Object, required: true },
+	isSingle: { type: Boolean, default: true },
+  recipeIdx: { type: Number, default: 1 },
+  cate: { type: Number, default: 0 }, 
 })
+const { recipe, isSingle, recipeIdx, cate } = toRefs(props)
+
+const userStore = useUserStore()
 
 // 辅助：在模板中不能直接用 Object.entries 的结果解构为响应式的遍历，暴露一个小函数
 function objectEntries(obj) {
@@ -78,22 +80,38 @@ function objectEntries(obj) {
   return Object.entries(obj)
 }
 
-// 简单收藏判断与切换（与你之前的风格一致）
-const isFav = computed(() => {
-  const cols = userStore.userInfo?.collections || []
-  return recipe.value && cols.some(c => c.name === recipe.value.name)
-})
+// 收藏
+const isFav = ref(false)
 
 function favClick() {
   if (!recipe.value || !recipe.value.name) return
-
-  if (!isFav.value) {
-    userStore.addFavDish && userStore.addFavDish({ dish: recipe.value })
+  isFav.value = !isFav.value
+  if (isFav.value) {
+    userStore.addFavDish && userStore.addFavDish({ dish: recipe.value, cate: cate.value })
     console.log('添加收藏:', recipe.value.name)
   } else {
     userStore.removeFavDish && userStore.removeFavDish({ dish: recipe.value })
     console.log('取消收藏:', recipe.value.name)
   }
+}
+
+// 删除
+function trashClick() {
+	if (!recipe.value || !recipe.value.name) return
+	uni.showModal({
+		title: '删除菜谱',
+		content: `确定要将「${recipe.value.name}」移出收藏吗？`,
+		cancelText: '取消',
+		confirmText: '删除',
+		confirmColor: '#ff4d4f',
+		success(res) {
+			if (res.confirm) {
+				// deleteRecipe()
+				userStore.removeFavDish && userStore.removeFavDish({ dish: recipe.value })
+				uni.navigateBack() // 返回上级页面
+			}
+		}
+	})
 }
 </script>
 
@@ -111,7 +129,7 @@ $shadow-color: rgba(43, 43, 43, 0.06);
 .menu {
   background: $bg;
   min-height: 100%;
-  padding: 50rpx 18rpx 25rpx;
+  padding: 50rpx 0rpx 25rpx;
   box-sizing: border-box;
   align-items: stretch;
 }
@@ -121,7 +139,7 @@ $shadow-color: rgba(43, 43, 43, 0.06);
   background: linear-gradient(180deg, $card-gradient-start 0%, $card-gradient-end 100%);
   border-radius: 28rpx;
   padding: 20rpx;
-  margin: 24rpx;
+  margin: 24rpx 0;
   box-shadow: 0 8rpx 30rpx $shadow-color;
 }
 
@@ -182,14 +200,14 @@ $shadow-color: rgba(43, 43, 43, 0.06);
 }
 
 .nutrition-value {
-  font-size: 26rpx;
+  font-size: 24rpx;
   font-weight: 700;
   color: $text-color;
 }
 
 .nrv-text {
-  margin-left: 5rpx;
-  font-size: 25rpx;
+  margin-left: 12rpx;
+  font-size: 28rpx;
   color: $muted;
 }
 
@@ -248,6 +266,28 @@ $shadow-color: rgba(43, 43, 43, 0.06);
 }
 
 .step-desc {
+  font-size: 24rpx;
+  color: $text-color;
+  line-height: 34rpx;
+}
+
+/* 功效说明 */
+.effect {
+  background: #f6fbff;
+  border-radius: 12rpx;
+  padding: 12rpx;
+  margin-bottom: 12rpx;
+}
+
+.effect-label {
+  font-size: 22rpx;
+  color: $muted;
+  font-weight: 600;
+  margin-bottom: 6rpx;
+  margin-right: 20rpx;
+}
+
+.effect-text {
   font-size: 24rpx;
   color: $text-color;
   line-height: 34rpx;
