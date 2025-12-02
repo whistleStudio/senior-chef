@@ -9,7 +9,7 @@
 				<view v-for="(item, index) in items" :key="index">
 					<!-- <text class="content-text">选项卡{{ index + 1 }}的内容</text> -->
 					<view v-if="current === index" class="content-box">
-						<uni-tag v-for="cv in item.vals" :key="cv" :text="cv" class="food-tag" type="primary" :customStyle="customTagStyle"
+						<uni-tag v-for="cv in item.vals" :key="cv" :text="cv" class="food-tag" type="default" :customStyle="customTagStyle"
 							:solid="selectedDefaultFood.has(cv)"
 						:inverted="!selectedDefaultFood.has(cv)" @click="onClickDefaultTag(cv)" />
 					</view>
@@ -17,9 +17,9 @@
 			</scroll-view>
 		</view>
 		<view class="food-custom">
-			<scroll-view scroll-y class="content" :show-scrollbar="false" style="height: 250rpx;">
+			<scroll-view scroll-y class="content" :show-scrollbar="false" style="height: 200rpx;">
 				<view class="content-box" style="justify-content: flex-start;">
-					<uni-tag v-for="(cv, ci) in [...customFood, '+']" :key="cv" :text="cv" class="food-tag food-custom-tag" type="success" :customStyle="customTagStyle"
+					<uni-tag v-for="(cv, ci) in [...customFood, '+']" :key="cv" :text="cv" class="food-tag food-custom-tag" type="primary" :customStyle="customTagStyle"
 				  :inverted="!selectedCustomFood.has(cv)" @click="onClickCustomTag(cv, ci)" @longpress="onLongPressCustomTag(cv, ci)"/>
 				</view>
 			</scroll-view>
@@ -62,10 +62,12 @@ const customTagStyle = `
 	text-align:center;
 	white-space:nowrap;
 	width:80rpx;
-	line-height:50rpx;
-	font-size:27rpx;
+	line-height:40rpx;
+	font-size:23rpx;
 	font-weight:500;
-	border-color: ${global.primaryColorLight};
+	border-color: rgb(43, 43, 43, 0.05);
+	border-radius: 15rpx;
+	box-shadow: 0 4rpx 12rpx rgba(43, 43, 43, 0.06);
 `;
 
 
@@ -174,27 +176,23 @@ const onClickCook = async () => {
 
 }
 
-watch(selectedDefaultFood.value, (newVal) => {
-	console.log('Updated Selected Indices:', newVal.size);
-	// if (newVal.size > 0) {
-	// 	popup.value.open();
-	// } else {
-	// 	popup.value.close();
-	// }
-});
-
 </script>
 
+
 <style lang="scss">
+$bg: #f9fbfb; 
+$card-gradient-start: #ffffff;
+$card-gradient-end: #f7fbff;
+$accent-pink: #ffe9f0;
+$accent-mint: #e7fff6;
+$accent-lavender: #f7f4fc;
+$text-color: #2b2b2b;
+$muted: #7b7b7b;
+$shadow-color: rgba(43, 43, 43, 0.06);
+
 .container {
-	padding: 0px 30rpx;
+	padding: 50rpx 30rpx 0rpx;
 }
-
-// .food-seg {
-// 	width: 100%;
-// 	margin-bottom: 20rpx;
-
-// }
 .content {
 	// width: 700rpx;
 	margin-top: 30rpx;
@@ -214,10 +212,15 @@ watch(selectedDefaultFood.value, (newVal) => {
 		}
 	}
 }
+
+.uni-tag--default--inverted {
+	color: $text-color !important;
+	background: linear-gradient(145deg, $card-gradient-start, $card-gradient-end) ;
+}
 .cook {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	margin-top: 20rpx;
+	margin-top: 10rpx;
 }
 </style>

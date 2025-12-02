@@ -156,6 +156,8 @@ const onClickCook = async () => {
   justify-content: flex-start;
   gap: 20rpx;
   margin-bottom: 20rpx;
+  font-weight: bold;
+  opacity: 0.6;
   >image {
     width: 50rpx;
     height: 50rpx;
@@ -171,7 +173,8 @@ const onClickCook = async () => {
 }
 .food-except {
   .content-2 {
-    height: 200rpx;
+    padding: 5rpx 0;
+    height: 180rpx;
     // background-color: red;
     flex-wrap: wrap;
     gap: 20rpx;

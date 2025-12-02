@@ -99,7 +99,7 @@
       },
 			{
 				"pagePath": "pages/profile/profile",
-				"iconPath": "static/tab-bar/chef-f.png",
+				"iconPath": "static/tab-bar/chef-0.png",
 				"selectedIconPath": "static/logo.png",
 				"text": "我的"
 			}

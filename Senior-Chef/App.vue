@@ -23,6 +23,10 @@
 						userStore.userInfo.nickname = res.data.nickname;
 						userStore.userInfo.gender = res.data.gender;
 						userStore.userInfo.collections = res.data.collections || [];
+						uni.setTabBarItem({
+							index: 3,
+							iconPath: `/static/tab-bar/chef-${userStore.userInfo.gender || 0}.png`,
+						})
 					}
 				} catch (e) {
 					console.error('Login error:', e);

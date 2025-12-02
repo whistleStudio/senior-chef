@@ -3,8 +3,9 @@
     <view class="profile-header flex-col-center">
       <image
         class="avatar"
-        :src="'/static/tab-bar/chef-f.png'"
+        :src="avatarUrl"
         mode="aspectFill"
+        @click="onClickAvatar"
       ></image>
       <text class="nickname">{{ userStore.userInfo.nickname || '游客' }}</text>
       <!-- <text class="subtext" v-if="userStore.userInfo.bio">{{ userStore.userInfo.bio }}</text> -->
@@ -25,23 +26,31 @@
             <text class="item-desc" v-if="item.desc">{{ item.desc }}</text>
           </view>
         </view>
-
         <uni-icons type="right" color="#C6C6C6" size="26" />
+        <button  class="contact-btn" v-if="idx === 1" open-type="contact">contact</button>
       </view>
     </view>
 
     <view class="bottom-area">
-      <button class="logout-btn" @click="onLogout" v-if="userStore.isLoggedIn">退出登录</button>
+      <button class="logout-btn"  @click="onLogout" v-if="userStore.isLoggedIn">退出登录</button>
     </view>
   </scroll-view>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useUserStore } from '../../store/user-store'
 import { onShow } from '@dcloudio/uni-app'
 
 const userStore = useUserStore()
+// const avatarUrlList = [
+//   '/static/tab-bar/chef-f.png',
+//   '/static/tab-bar/chef-m.png',
+// ]
+// const curAvatarIdx = ref(0);
+const avatarUrl = computed(() => {
+  return `/static/tab-bar/chef-${userStore.userInfo.gender || 0}.png`;
+});
 
 // 可替换为项目静态资源路径
 const profileContentList = ref([
@@ -58,23 +67,6 @@ function onClickFav(idx) {
       uni.navigateTo({ url: '/pages/favorites/favorites' })
       break
     case 1:
-      // 联系客服：展示模态并支持一键复制联系方式
-      uni.showModal({
-        title: '联系客服',
-        content: '如需帮助，请发送邮件到 support@example.com 或拨打客服电话 400-123-4567。',
-        confirmText: '复制邮箱',
-        cancelText: '取消',
-        success: (res) => {
-          if (res.confirm) {
-            uni.setClipboardData({
-              data: 'support@example.com',
-              success: () => {
-                uni.showToast({ title: '已复制邮箱', icon: 'success' })
-              },
-            })
-          }
-        },
-      })
       break
     case 2:
       // 碎碎念念（私密笔记 / 草稿）
@@ -102,6 +94,17 @@ function onLogout() {
       }
     },
   })
+}
+
+function onClickAvatar() {
+  // 点击切换
+  userStore.updateGender();
+  // curAvatarIdx = (curAvatarIdx + 1) % avatarUrlList.length;
+  // avatarUrl.value = avatarUrlList[curAvatarIdx];
+  // uni.setTabBarItem({
+  //   index: 3,
+  //   iconPath: avatarUrlList[curAvatarIdx],
+  // });
 }
 
 onShow(() => {

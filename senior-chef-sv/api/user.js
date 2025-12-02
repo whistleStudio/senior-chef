@@ -128,6 +128,27 @@ rt.post('/removeCollections', (req, res) => {
   });
 })
 
+/* 更改性别 */
+rt.post('/updateGender', (req, res) => {
+  let { openid, gender } = req.body;
+  gender = (gender + 1) % 2; // 0-女, 1-男
+  ;(async () => {
+    const user = await User.findOneAndUpdate(
+      { openid },
+      { $set: { gender } },
+      { new: true }
+    );
+    if (user) {
+      res.json({ err: 0, gender });
+    } else {
+      res.json({ err: 1, msg: 'User not found' });
+    }
+  })().catch(error => {
+    console.error('Update Gender Error:', error);
+    res.json({ err: 1, msg: 'Failed to update gender' });
+  });
+})
+
 // 格式化日期
 function formatToday() {
   const today = new Date();

@@ -65,5 +65,28 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  return { userInfo, refreshUserInfo, addFavDish, removeFavDish, currentRecipe };
+  // 更改性别
+  const updateGender = async () => {
+    try {
+      const res = await utils.reqData({
+        url: '/api/user/updateGender',
+        method: 'POST',
+        payload: {
+          openid: userInfo.value.openid,
+          gender: userInfo.value.gender
+        } 
+      });
+      if (res.err === 0) {
+        userInfo.value.gender = res.gender;
+        uni.setTabBarItem({
+          index: 3,
+          iconPath: `/static/tab-bar/chef-${userInfo.value.gender || 0}.png`,
+        });
+      }
+    } catch (error) {
+      console.error('Error updating gender:', error);
+    }
+  }
+
+  return { userInfo, refreshUserInfo, addFavDish, removeFavDish, currentRecipe, updateGender };
 });

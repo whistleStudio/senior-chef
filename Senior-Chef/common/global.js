@@ -1,7 +1,7 @@
 export default {
-  primaryColor: '#65bd1d',
-  primaryColorLight: '#e6f4d9',
-  primaryColorDark: '#4ca315',
+  primaryColor: '#9cacc3ff',
+  primaryColorLight: '#eceff0ff',
+  primaryColorDark: '#8e99a7ff',
 
   foodList: [
     { 

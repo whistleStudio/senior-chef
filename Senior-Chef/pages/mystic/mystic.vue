@@ -17,7 +17,7 @@
       </view>
     </view>
     <view class="next" v-if="isNextShow" @click="onClickNext">{{ `>>>` }}</view>
-    <uni-icons class="reset" @click="onClickReset" type="reload" color="#ffffff88" size="35"/>
+    <uni-icons class="reset" @click="onClickReset" type="reload" color="#593d6455" size="35"/>
     <!-- 预览大图层 -->
     <view class="preview flex-col-center" v-if="previewVisible" @click="closePreview">
       <image class="preview-img" :src="previewSrc" mode="aspectFit" />
@@ -34,7 +34,7 @@ import { useMenuStore } from '../../store/menu-store';
 
 const menuStore = useMenuStore();
 
-const placeholderStyle = `color: #ffffff99;`;
+const placeholderStyle = `color: #2b2b2b55;line-height: 50rpx;`;
 const step = ref(1);
 const question = ref('');
 const isNextShow = computed(() => {
