@@ -80,7 +80,8 @@ export const useUserStore = defineStore('user', () => {
         userInfo.value.gender = res.gender;
         uni.setTabBarItem({
           index: 3,
-          iconPath: `/static/tab-bar/chef-${userInfo.value.gender || 0}.png`,
+          iconPath: `/static/tab-bar/chef-${(userInfo.value.gender+'') || 2}-bw.png`,
+          selectedIconPath: `/static/tab-bar/chef-${(userInfo.value.gender+'') || 2}.png`
         });
       }
     } catch (error) {

@@ -178,3 +178,29 @@ $accent-purple: #593d64;
   }
 }
 
+/* 动画 */
+.dec1 {
+  animation: dec1Anim 1s infinite !important;
+  @keyframes dec1Anim {
+    0% { opacity: 0; }
+    50% { opacity: 0.4; }
+    100% { opacity: 0; }
+  }
+}
+
+.dec2 {
+  animation: dec2Anim 0.6s infinite !important;
+  @keyframes dec2Anim {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+}
+
+.dec3 {
+  opacity: 1 !important; 
+  animation: dec3Anim 1s infinite !important;
+  @keyframes dec3Anim {
+    0% { transform: translate(-50%) rotate(0deg); }
+    100% { transform: translate(-50%) rotate(360deg); }
+  }
+}

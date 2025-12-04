@@ -3,9 +3,9 @@
     <view class="title">占卜食疗，来制作一道魔法料理吧</view>
     <view class="step step-1 flex-col-center" v-if="step===1">
       <view class="step-title">Step 1</view>
-      <input class="question" :placeholder-style="placeholderStyle" v-model="question" focus placeholder="请输入你想问的问题" :maxlength="30"/>
+      <input class="question" :placeholder-style="placeholderStyle" v-model.trim="question" focus placeholder="请输入你想问的问题" :maxlength="30"/>
     </view>
-    <view class="step step-2 flex-col-center" v-if="step===2">
+    <view class="step step-2 flex-col-center" v-if="step>=2">
       <view class="step-title">Step 2</view>
       <view class="step-desc">默念你的问题，翻开下方三张卡牌</view>
       <view class="flex-row-center tarot">
@@ -16,7 +16,19 @@
         </view>
       </view>
     </view>
-    <view class="next" v-if="isNextShow" @click="onClickNext">{{ `>>>` }}</view>
+
+    <view class="cook flex-col-center" @click="onClickNext" style="position: relative;" >
+			<image style="height: 300rpx;width: 420rpx;" src="@/static/cartoon/cartoon2.png" mode="aspectFit"/>
+      <image style="height: 60rpx; position: absolute; transform: translate(-50%) ; left: 51.5%; top: 34%;"
+				:src="cartoonFaceSrc"
+				mode="aspectFit"
+			/>
+			<image style="height: 45rpx; position: absolute; transform-origin: center; transform: translate(-50%); left: 75.6%; bottom: 14.3%; opacity: 0;"
+				:class="{dec1: step>=1 && question, dec2: step===2 && tarotCards.some(card => card.flipped), dec3: step===3 }"
+				src="@/static/cartoon/cartoon2-dec0.png"
+				mode="aspectFit"
+			/>
+		</view>
     <uni-icons class="reset" @click="onClickReset" type="reload" color="#593d6455" size="35"/>
     <!-- 预览大图层 -->
     <view class="preview flex-col-center" v-if="previewVisible" @click="closePreview">
@@ -27,27 +39,21 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import global from '../../common/global';
 import utils from '../../common/utils.js';
 import { useMenuStore } from '../../store/menu-store';
 
 const menuStore = useMenuStore();
 
+const cartoonFaceSrc = ref('/static/cartoon/cartoon2-face0.png');
+const tim = ref(null);
+let oldFlippedCount = 0;
+// const decOpacity = ref(0);
+
 const placeholderStyle = `color: #2b2b2b55;line-height: 50rpx;`;
 const step = ref(1);
 const question = ref('');
-const isNextShow = computed(() => {
-  if (step.value === 1) {
-    return question.value.trim().length > 0;
-  } else if (step.value === 2) {
-    for (let v of tarotCards.value) {
-      if (!v.flipped) return false;
-    }
-    return true;
-  }
-  return false;
-});
 const tarotCards = ref([
   {label: "过去", val: "", flipped: false},
   {label: "现在", val: "", flipped: false},
@@ -95,50 +101,72 @@ const closePreview = () => {
 const menuTestJson = import('@/static/menu3.test.json');  // 测试用
 // 下一步
 const onClickNext = async () => {
-  if (step.value === 1) {
-    step.value = 2;
-    getRandomTarotCards(); // 获取随机卡牌
-  } else if (step.value === 2) {
-    // 菜谱生成
-    try {
-      uni.showLoading({
-        title: '正在为您占卜...'
-      });
-      // const res = await utils.reqData({
-      //   url: '/api/menu/tarot-cook',
-      //   method: 'POST',
-      //   payload: {
-      //     question: question.value,
-      //     tarotCards: tarotCards.value.map(card => card.val)
-      //   }
-      // });
-      uni.hideLoading();
-      /* ---------测试开始----------- */
-      const data = await menuTestJson;
-      menuStore.menuData = data;
-      uni.navigateTo({
-        url: '/pages/menu/menu'
-      });
-      /* ---------测试结束----------- */
-      // if (res && res.err === 0) {
-      //   menuStore.menuData = res.data;
-      //   uni.navigateTo({
-      //      url: '/pages/menu/menu'  // 占位，后续改为菜谱详情页;
-      //   });
-      // } else {
-      //   uni.showToast({
-      //     title: '占卜失败，请重试',
-      //     duration: 1000
-      //   });
-      // }
-      // console.log('Mystic Cook Response:', res.data);
-    } catch (err) {
-      uni.hideLoading();
-      uni.showToast({
-        title: '占卜失败，请重试',
-        duration: 1000
-      });
-      console.error('Show loading failed:', err);
+  clearInterval(tim.value);
+  if (question.value.trim()) {
+    if (step.value === 1) {
+      step.value = 2;
+      cartoonFaceSrc.value = '/static/cartoon/cartoon2-face0.png';
+      getRandomTarotCards(); // 获取随机卡牌
+    } else if (step.value === 2) {
+      if (countFlippedCards() < 3) {
+        uni.showToast({
+          title: '请翻开所有卡牌',
+          icon: 'none'
+        });
+        return;
+      }
+      step.value = 3;
+      tim.value = setInterval(() => {
+        cartoonFaceSrc.value = cartoonFaceSrc.value === '/static/cartoon/cartoon2-face0.png' ?
+        '/static/cartoon/cartoon2-face1.png' : '/static/cartoon/cartoon2-face0.png';
+      }, 500);
+      // 菜谱生成
+      try {
+        uni.showLoading({
+          title: '正在为您占卜...'
+        });
+        // const res = await utils.reqData({
+        //   url: '/api/menu/tarot-cook',
+        //   method: 'POST',
+        //   payload: {
+        //     question: question.value,
+        //     tarotCards: tarotCards.value.map(card => card.val)
+        //   }
+        // });
+        await utils.wait(3); // 测试等待时间
+        clearInterval(tim.value);
+        tim.value = null;
+        uni.hideLoading();
+        /* ---------测试开始----------- */
+        const data = await menuTestJson;
+        menuStore.menuData = data;
+        uni.navigateTo({
+          url: '/pages/menu/menu'
+        });
+        /* ---------测试结束----------- */
+        // if (res && res.err === 0) {
+        //   menuStore.menuData = res.data;
+        //   uni.navigateTo({
+        //      url: '/pages/menu/menu'  // 占位，后续改为菜谱详情页;
+        //   });
+        // } else {
+        //   uni.showToast({
+        //     title: '占卜失败，请重试',
+        //     duration: 1000
+        //   });
+        // }
+        // console.log('Mystic Cook Response:', res.data);
+      } catch (err) {
+        step.value = 2;
+        clearInterval(tim.value);
+        tim.value = null;
+        uni.hideLoading();
+        uni.showToast({
+          title: '占卜失败，请重试',
+          duration: 1000
+        });
+        console.error('Show loading failed:', err);
+      }
     }
   }
 };
@@ -149,6 +177,8 @@ const onClickReset = () => {
   tarotCards.value.forEach(card => {
     card.flipped = false;
   });
+  oldFlippedCount = 0;
+  cartoonFaceSrc.value = '/static/cartoon/cartoon2-face0.png';
   // 重新请求卡牌，考虑增加些loading, 以减少调用频率
 };
 
@@ -168,13 +198,38 @@ function getRandomTarotCards() {
 };
 
 /* ---------------------------- */
-// onMounted(() => {
-//   console.log('Mystic mounted');
-//   const cards = getRandomTarotCards();
-//   tarotCards.value.forEach((card, idx) => {
-//     card.val = cards[idx];
-//   });
-// });
+// 动画
+watch(question, (newV, oldV) => {
+  if (step.value === 1 && !oldV.trim() && newV.trim()) {
+    clearTimeout(tim.value);
+    cartoonFaceSrc.value = cartoonFaceSrc.value = '/static/cartoon/cartoon2-face1.png'
+    tim.value = setTimeout(() => {
+      cartoonFaceSrc.value = cartoonFaceSrc.value = '/static/cartoon/cartoon2-face0.png';
+    }, 2000);
+  }
+})
+
+
+watch(
+  tarotCards, 
+  _ => {
+    const newFlippedCount = countFlippedCards();
+    console.log('Flipped Cards Count:', newFlippedCount);
+    console.log('Previous Flipped Cards Count:', oldFlippedCount);
+    if (step.value === 2 && newFlippedCount > oldFlippedCount) {
+      clearTimeout(tim.value);
+      cartoonFaceSrc.value = cartoonFaceSrc.value = '/static/cartoon/cartoon2-face1.png'
+      tim.value = setTimeout(() => {
+        cartoonFaceSrc.value = cartoonFaceSrc.value = '/static/cartoon/cartoon2-face0.png';
+      }, 1000);
+    }
+    oldFlippedCount = newFlippedCount;
+  },
+  { deep: true }
+)
+function countFlippedCards() {
+  return tarotCards.value.filter(card => card.flipped).length;
+}
 </script>
 
 <style src="./mystic.scss" scoped lang="scss"></style>

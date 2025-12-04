@@ -131,7 +131,7 @@ rt.post('/removeCollections', (req, res) => {
 /* 更改性别 */
 rt.post('/updateGender', (req, res) => {
   let { openid, gender } = req.body;
-  gender = (gender + 1) % 2; // 0-女, 1-男
+  gender = (gender + 1) % 3; // 0-女, 1-男, 2-喵
   ;(async () => {
     const user = await User.findOneAndUpdate(
       { openid },

@@ -26,9 +26,21 @@
         />
       </scroll-view>
     </view>
-    <view class="cook">
-			<image style="height: 280rpx;" src="@/static/pot.png" mode="aspectFit"
-			@click="onClickCook"/>
+    <view class="cook flex-col-center" @click="onClickCook" style="position: relative;">
+			<image style="height: 300rpx;width: 420rpx;" src="@/static/cartoon/cartoon1.png" mode="aspectFit"/>
+      <image style="height: 50rpx; position: absolute; transform: translateX(-50%); left: 49%;"
+				:src="cartoonFaceSrc"
+				mode="aspectFit"
+			/>
+			<image style="height: 50rpx; position: absolute; transform: translateX(-50%); left: 35%; bottom: 120rpx; opacity: 0;"
+				:class="tim ? 'dec' : ''"
+				src="@/static/cartoon/cartoon1-dec0.png"
+				mode="aspectFit"
+			/>
+      <image style="height: 130rpx; position: absolute; transform: translate(-50%); left: 24%; top: 4%;"
+        src="@/static/cartoon/bubble.png"
+        mode="aspectFit"
+      />
 		</view>
   </view>
   <uni-popup ref="inputDialog" type="dialog">
@@ -55,6 +67,8 @@ const nutriState = ref(nutriStateVal);
 const foodExcept = ref(new Set(["香菜", "辣椒", "海鲜"]));
 const selectedFoodExcept = ref(new Set());
 const inputDialog = ref(null);
+const cartoonFaceSrc = ref('/static/cartoon/cartoon1-face0.png');
+const tim = ref(null);
 
 /*-------- tag操作相关开始 ---------*/
 const onClickFoodExceptTag = (food, idx) => {
@@ -90,6 +104,7 @@ const dialogInputConfirm = (val) => {
 const menuTestJson = import('@/static/menu2.test.json');  // 测试用
 
 const onClickCook = async () => {
+  clearInterval(tim.value);
   const nutri_increase = [];
   const nutri_decrease = [];
   Object.keys(nutriState.value).forEach(k => {
@@ -102,9 +117,14 @@ const onClickCook = async () => {
   });
   console.log('营养增量:', nutri_increase);
   console.log('营养减量:', nutri_decrease);
+  tim.value = setInterval(() => {
+    cartoonFaceSrc.value = cartoonFaceSrc.value === '/static/cartoon/cartoon1-face0.png' ?
+      '/static/cartoon/cartoon1-face1.png' : '/static/cartoon/cartoon1-face0.png';
+  }, 500);
   uni.showLoading({
     title: '正在为您烹饪...'
   });
+  await utils.wait(3); // 测试等待时间
   try {
     // const res = await utils.reqData({
     //   url: '/api/menu/nutritionist-cook',
@@ -115,6 +135,8 @@ const onClickCook = async () => {
     //     food_avoid: Array.from(selectedFoodExcept.value).join(',')
     //   }
     // });
+    clearInterval(tim.value);
+    tim.value = null;
     uni.hideLoading();
     // if (res && res.err === 0) {
     //   menuStore.menuData = res.data;
@@ -136,6 +158,8 @@ const onClickCook = async () => {
     /* -----------测试用结束-------------- */
     console.log('Cook API Response:', res);
   } catch (err) {
+    clearInterval(tim.value);
+    tim.value = null;
     uni.hideLoading();
 		uni.showToast({
 			title: '烹饪失败，请重试',
@@ -174,7 +198,7 @@ const onClickCook = async () => {
 .food-except {
   .content-2 {
     padding: 5rpx 0;
-    height: 180rpx;
+    height: 160rpx;
     // background-color: red;
     flex-wrap: wrap;
     gap: 20rpx;
@@ -183,4 +207,14 @@ const onClickCook = async () => {
     }
   }
 }
+
+.dec {
+  animation: identifier 1s infinite;
+  @keyframes identifier {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+}
+
 </style>

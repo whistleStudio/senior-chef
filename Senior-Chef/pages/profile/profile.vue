@@ -49,7 +49,7 @@ const userStore = useUserStore()
 // ]
 // const curAvatarIdx = ref(0);
 const avatarUrl = computed(() => {
-  return `/static/tab-bar/chef-${userStore.userInfo.gender || 0}.png`;
+  return `/static/tab-bar/chef-${(userStore.userInfo.gender+'') || 2}.png`;
 });
 
 // 可替换为项目静态资源路径

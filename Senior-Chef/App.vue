@@ -25,7 +25,8 @@
 						userStore.userInfo.collections = res.data.collections || [];
 						uni.setTabBarItem({
 							index: 3,
-							iconPath: `/static/tab-bar/chef-${userStore.userInfo.gender || 0}.png`,
+							iconPath: `/static/tab-bar/chef-${(userStore.userInfo.gender+'') || 2}-bw.png`,
+							selectedIconPath: `/static/tab-bar/chef-${(userStore.userInfo.gender+'') || 2}.png`
 						})
 					}
 				} catch (e) {

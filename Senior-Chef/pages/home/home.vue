@@ -1,3 +1,4 @@
+<!-- home 不是首页 -->
 <template>
 	<view class="container">
 		<view class="food-default" >
@@ -17,16 +18,28 @@
 			</scroll-view>
 		</view>
 		<view class="food-custom">
-			<scroll-view scroll-y class="content" :show-scrollbar="false" style="height: 200rpx;">
+			<scroll-view scroll-y class="content" :show-scrollbar="false" style="height: 160rpx;">
 				<view class="content-box" style="justify-content: flex-start;">
 					<uni-tag v-for="(cv, ci) in [...customFood, '+']" :key="cv" :text="cv" class="food-tag food-custom-tag" type="primary" :customStyle="customTagStyle"
 				  :inverted="!selectedCustomFood.has(cv)" @click="onClickCustomTag(cv, ci)" @longpress="onLongPressCustomTag(cv, ci)"/>
 				</view>
 			</scroll-view>
 		</view>
-		<view class="cook">
-			<image style="height: 280rpx;" src="@/static/pot.png" mode="aspectFit"
-			@click="onClickCook"/>
+		<view class="cook" @click="onClickCook">
+			<image style="height: 300rpx;width: 420rpx;" src="@/static/cartoon/cartoon0.png" mode="aspectFit"/>
+			<image style="height: 90rpx; position: absolute;"
+				:src="cartoonFaceSrc"
+				mode="aspectFit"
+			/>
+			<image style="height: 150rpx; position: absolute; transform: translateX(-50%); left: 57%; bottom: 55rpx; opacity: 0;"
+				:class="tim ? 'dec' : ''"
+				src="@/static/cartoon/cartoon0-dec0.png"
+				mode="aspectFit"
+			/>
+			<image style="height: 130rpx; position: absolute; transform: translate(-50%); left: 23%; top: 10%;"
+        src="@/static/cartoon/bubble.png"
+        mode="aspectFit"
+      />
 		</view>                                  
 	</view>	
 	<uni-popup ref="inputDialog" type="dialog">
@@ -54,6 +67,8 @@ const inActiveColor = ref(global.primaryColorLight);
 const inputDialog = ref(null);
 const popup = ref(null);
 const menuStore = useMenuStore();
+const cartoonFaceSrc = ref('/static/cartoon/cartoon0-face0.png');
+const tim = ref(null);
 
 const customTagStyle = `
 	display:flex;
@@ -126,7 +141,10 @@ const onLongPressCustomTag = (tag, index) => {
 
 // 点击烹饪按钮
 const menuTestJson = import('@/static/menu.test.json'); // 测试节省付费接口请求次数用
+
+
 const onClickCook = async () => {
+	clearInterval(tim.value);
 	const allSelectedFood = [
 		...Array.from(selectedDefaultFood.value),
 		...Array.from(selectedCustomFood.value)
@@ -139,6 +157,10 @@ const onClickCook = async () => {
 		return;
 	}
 	console.log('Cooking with selected food...');
+	tim.value = setInterval(() => {
+		cartoonFaceSrc.value = cartoonFaceSrc.value === '/static/cartoon/cartoon0-face0.png' ? 
+		'/static/cartoon/cartoon0-face1.png' : '/static/cartoon/cartoon0-face0.png';
+	}, 500);
 	uni.showLoading({
 		title: '正在为您烹饪...'
 	});
@@ -150,6 +172,10 @@ const onClickCook = async () => {
 		// 		food: allSelectedFood.join(',')
 		// 	}
 		// })
+		await utils.wait(3);
+		clearInterval(tim.value);
+		tim.value = null;
+		cartoonFaceSrc.value = '/static/cartoon/cartoon0-face0.png';
 		uni.hideLoading();
 		const res = await menuTestJson; // 测试用
 		if (res && res.err === 0) {
@@ -166,6 +192,8 @@ const onClickCook = async () => {
 		}
 		console.log('Cook Response:', res);
 	} catch (error) {
+		clearInterval(tim.value);
+		tim.value = null;
 		uni.hideLoading();
 		uni.showToast({
 			title: '烹饪失败，请重试',
@@ -222,5 +250,17 @@ $shadow-color: rgba(43, 43, 43, 0.06);
 	justify-content: center;
 	align-items: center;
 	margin-top: 10rpx;
+	position: relative;
 }
+
+.dec {
+	animation: decAni 2s infinite !important;
+	@keyframes decAni {
+		0% { opacity: 0; }
+		50% { opacity: 1; }
+		100% { opacity: 0; }
+	}
+}
+
+
 </style>

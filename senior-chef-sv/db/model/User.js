@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
     default: "",
   },
   avatarUrl: { type: String, default: '' },
-  gender: { type: Number, default: 0 },
+  gender: { type: Number, default: 2 },
   level: { type: Number, default: 0 },
   collections: { type: [Object], default: [] }, 
   createdAt: { type: Date, default: Date.now }

@@ -7,27 +7,27 @@
 	},
 	"pages": [ 
 		{
-			"path": "pages/home/home",
+			"path": "pages/nutritionist/nutritionist",
 			"style": {
-				"navigationBarTitleText": "有啥吃啥"
+				"navigationBarTitleText": "养生喵"
 			}
 		},
 		{
-			"path": "pages/nutritionist/nutritionist",
+			"path": "pages/home/home",
 			"style": {
-				"navigationBarTitleText": "营养专家"
+				"navigationBarTitleText": "天菜喵"
 			}
 		},
 		{
 			"path": "pages/mystic/mystic",
 			"style": {
-				"navigationBarTitleText": "玄学大师"
+				"navigationBarTitleText": "占卜喵"
 			}
 		},
 		{
 			"path": "pages/profile/profile",
 			"style": {
-				"navigationBarTitleText": "我的"
+				"navigationBarTitleText": "喵了个喵"
 			}
 		},
 		{
@@ -74,34 +74,34 @@
 		}
 	],
 	"tabBar": {
-		"color": "#7A7E83",
-		"selectedColor": "#007AFF",
+		"color": "#959595",
+		"selectedColor": "#535353",
 		"backgroundColor": "#F8F8F8",
 		"borderStyle": "black",
 		"list": [
       {
-        "pagePath": "pages/home/home",
-        "iconPath": "static/tab-bar/fridge.png",
-        "selectedIconPath": "static/logo.png",
-        "text": "有啥吃啥"
-      },
-      {
         "pagePath": "pages/nutritionist/nutritionist",
-        "iconPath": "static/tab-bar/nutritionist.png",
-        "selectedIconPath": "static/logo.png",
-        "text": "营养专家"
+        "iconPath": "static/tab-bar/nutritionist-bw.png",
+        "selectedIconPath": "static/tab-bar/nutritionist.png",
+        "text": "养生喵"
+      },
+			{
+        "pagePath": "pages/home/home",
+        "iconPath": "static/tab-bar/basket-bw.png",
+        "selectedIconPath": "static/tab-bar/basket.png",
+        "text": "天菜喵"
       },
       {
         "pagePath": "pages/mystic/mystic",
-        "iconPath": "static/tab-bar/crystal.png",
-        "selectedIconPath": "static/logo.png",
-        "text": "玄学大师"
+        "iconPath": "static/tab-bar/crystal-bw.png",
+        "selectedIconPath": "static/tab-bar/crystal.png",
+        "text": "占卜喵"
       },
 			{
 				"pagePath": "pages/profile/profile",
-				"iconPath": "static/tab-bar/chef-0.png",
-				"selectedIconPath": "static/logo.png",
-				"text": "我的"
+				"iconPath": "static/tab-bar/chef-0-bw.png",
+				"selectedIconPath": "static/tab-bar/chef-0.png",
+				"text": "喵了个喵"
 			}
 		]
 	},
