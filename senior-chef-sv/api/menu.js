@@ -2,6 +2,7 @@ const express = require('express');
 const rt = express.Router();
 const { OpenAI } = require("openai");
 const { generateFridgePrompt, generateNutritionistPrompt, generateTarotPrompt } = require('../utils/prompt-gen');
+const User = require('../db/model/User');
 
 // qwen3-vl-flash qwen-flash
 const openai = new OpenAI(
@@ -22,6 +23,9 @@ rt.post("/cook", (req, res) => {
   console.log("original cook req.body: ", req.body);
   ;(async () => {
     try {
+      const user = await User.findOneAndUpdate({ openid: req.body.openid }, { $inc: { limit: -1 }}, { new: true });
+      if (!user) {res.json({ err: 2, msg: "User not found" }); return;}
+      if (user.limit < 0) {res.json({ err: 3, msg: "No remaining usage limit for today" }); return;}
       const prompt = generateFridgePrompt(req.body.food || "");
       const aiResponse = await askAi(prompt);
       if (aiResponse) res.json({err: 0, data: aiResponse });
@@ -37,6 +41,9 @@ rt.post("/nutritionist-cook", (req, res) => {
   console.log("original nutritionist-cook req.body: ", req.body);
   ;(async () => {
     try {
+      const user = await User.findOneAndUpdate({ openid: req.body.openid }, { $inc: { limit: -1 }}, { new: true });
+      if (!user) {res.json({ err: 2, msg: "User not found" }); return;}
+      if (user.limit < 0) {res.json({ err: 3, msg: "No remaining usage limit for today" }); return;}
       const prompt = generateNutritionistPrompt(req.body || {});
       const aiResponse = await askAi(prompt);
       if (aiResponse) res.json({err: 0, data: aiResponse });
@@ -52,6 +59,9 @@ rt.post("/tarot-cook", (req, res) => {
   console.log("original tarot-cook req.body: ", req.body);
   ;(async () => {
     try {
+      const user = await User.findOneAndUpdate({ openid: req.body.openid }, { $inc: { limit: -1 }}, { new: true });
+      if (!user) {res.json({ err: 2, msg: "User not found" }); return;}
+      if (user.limit < 0) {res.json({ err: 3, msg: "No remaining usage limit for today" }); return;}
       const prompt = generateTarotPrompt(req.body || {});
       const aiResponse = await askAi(prompt);
       if (aiResponse) res.json({err: 0, data: aiResponse });
@@ -73,8 +83,8 @@ async function askAi(content) {
         { role: "user", content }
       ],
   }); 
-  console.log("completion:", completion);
-  console.log(completion.choices[0].message.content);
+  // console.log("completion:", completion);
+  // console.log(completion.choices[0].message.content);
   const completionJson = JSON.parse(completion.choices[0].message.content);
   // console.log(JSON.stringify(completion, null, 4));
   return completionJson;

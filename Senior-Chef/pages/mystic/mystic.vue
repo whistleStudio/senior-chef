@@ -43,9 +43,11 @@ import { ref, computed, watch } from 'vue';
 import global from '../../common/global';
 import utils from '../../common/utils.js';
 import { useMenuStore } from '../../store/menu-store';
-import { onLoad, onHide, onShow } from '@dcloudio/uni-app';
+import { useUserStore } from '../../store/user-store';
+import { onShow } from '@dcloudio/uni-app';
 
 const menuStore = useMenuStore();
+const userStore = useUserStore();
 
 const cartoonFaceSrc = ref('/static/cartoon/cartoon2-face0.png');
 const tim = ref(null);
@@ -103,7 +105,8 @@ const closePreview = () => {
 // 下一步
 const onClickNext = async () => {
   clearInterval(tim.value);
-  if (question.value.trim()) {
+  const que = question.value.trim();
+  if (que && que.length < 30) {
     if (step.value === 1) {
       step.value = 2;
       cartoonFaceSrc.value = '/static/cartoon/cartoon2-face0.png';
@@ -131,7 +134,8 @@ const onClickNext = async () => {
           url: '/api/menu/tarot-cook',
           method: 'POST',
           payload: {
-            question: question.value,
+            openid: userStore.userInfo.openid,
+            question: que,
             tarotCards: tarotCards.value.map(card => card.val)
           }
         });
@@ -155,7 +159,7 @@ const onClickNext = async () => {
           });
         } else {
           uni.showToast({
-            title: '占卜失败，请重试',
+            title: res?.err===3 ? '今日占卜次数已用完' : '占卜失败，请重试',
             duration: 1000
           });
         }
@@ -175,13 +179,14 @@ const onClickNext = async () => {
   } else {
     cartoonFaceSrc.value = '/static/cartoon/cartoon2-face1.png';
     uni.showToast({
-      title: '我还不知道你的问题呢',
+      title:  que ? '糟糕, 你的问题太长了' : '我还不知道你的问题呢',
       icon: 'none',
       duration: 1000
     });
     tim.value = setTimeout(() => {
       cartoonFaceSrc.value = '/static/cartoon/cartoon2-face0.png';
     }, 1000);
+    if (que) question.value = "";
   }
 };
 

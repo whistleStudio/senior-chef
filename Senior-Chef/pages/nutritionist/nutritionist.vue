@@ -55,8 +55,10 @@ import NutriToggle from '@/components/NutriToggle/NutriToggle.vue';
 import global from '@/common/global.js';
 import utils from '@/common/utils.js';
 import { useMenuStore } from '@/store/menu-store.js';
+import { useUserStore } from '../../store/user-store';
 
 const menuStore = useMenuStore();
+const userStore = useUserStore();
 
 const nutriMap = global.nutriMap;
 const nutriStateVal = {}
@@ -94,14 +96,20 @@ const onLongPressFoodExceptTag = (food, idx) => {
 
 const dialogInputConfirm = (val) => {
 	const inputValue = val.trim();
-	if (inputValue) {
+  if (!inputValue || inputValue==="+") return;
+	if (inputValue && inputValue.length < 8) {
 		foodExcept.value.add(inputValue);
 		console.log('Now foodExcept:', foodExcept.value);
-	}
+	} else {
+    uni.showToast({
+      title: '食材名称需少于8个字',
+      icon: 'none'
+    });
+  }
 };
 /*-------- tag操作相关结束 ---------*/
 
-const menuTestJson = import('@/static/menu2.test.json');  // 测试用
+// const menuTestJson = import('@/static/menu2.test.json');  // 测试用
 
 const onClickCook = async () => {
   clearInterval(tim.value);
@@ -139,6 +147,7 @@ const onClickCook = async () => {
       url: '/api/menu/nutritionist-cook',
       method: 'POST',
       payload: {
+        openid: userStore.userInfo.openid,
         nutri_increase: nutri_increase.join(','),
         nutri_decrease: nutri_decrease.join(','),
         food_avoid: Array.from(selectedFoodExcept.value).join(',')
@@ -157,7 +166,7 @@ const onClickCook = async () => {
       });
     } else {
       uni.showToast({
-        title: res.msg || '烹饪失败，请重试',
+        title: res?.err===3 ? '今日定制次数已用完' : '定制失败，请重试',
         icon: 'none',
         duration: 1000
       });
@@ -175,7 +184,7 @@ const onClickCook = async () => {
     tim.value = null;
     uni.hideLoading();
 		uni.showToast({
-			title: '烹饪失败，请重试',
+			title: '定制失败，请重试',
 			icon: 'none'
 		});
 		return;

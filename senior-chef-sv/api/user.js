@@ -25,7 +25,7 @@ rt.post('/login', (req, res) => {
     const wxData = await wxRes.json();
     console.log('WeChat Login Response:', wxData);
     const { openid } = wxData;
-    console.log('Extracted OpenID:', openid);
+    // console.log('Extracted OpenID:', openid);
     const user = await User.findOneAndUpdate(
       { openid },
       { $setOnInsert: { openid, nickname: `chef_${openid.slice(0, 6)}` } },
@@ -56,7 +56,7 @@ rt.post('/getProfile', (req, res) => {
 
 
 /* 单个菜品添加收藏；cate: 0-养生喵, 1-天菜喵, 2-占卜喵 */
-const maxCollectionsLength = 50; // 最大收藏数量限制
+const maxCollectionsLength = 30; // 最大收藏数量限制
 rt.post('/addCollections', (req, res) => {
   const { openid, dish, cate } = req.body;
   console.log('Add to Collections Request:', { openid, dishName: dish.name, cate });

@@ -4,7 +4,7 @@ import utils from '../common/utils.js';
 
 export const useUserStore = defineStore('user', () => {
   // const openid = ref('xxxx');
-  const userInfo = ref({ openid: 'test-code', nickname: 'Chef', gender: 0, collections: []});
+  const userInfo = ref({ openid: '', nickname: 'Chef', gender: 0, collections: []});
   const currentRecipe = ref({})
 
   // 刷新数据

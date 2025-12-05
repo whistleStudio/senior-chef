@@ -45,14 +45,14 @@
 		<uni-popup-dialog ref="inputClose"  mode="input" title="自定义食材" value="对话框预置提示内容!"
 			placeholder="请输入内容（长按标签删除）" @confirm="dialogInputConfirm"></uni-popup-dialog>
 	</uni-popup>
-	<uni-popup ref="popup" type="bottom" border-radius="10px 10px 0 0">底部弹出 Popup 自定义圆角</uni-popup>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import global from '@/common/global.js';
 import utils from '@/common/utils.js';
 import { useMenuStore } from '@/store/menu-store.js';
+import { useUserStore } from '../../store/user-store.js';
 
 
 const foodList = global.foodList;
@@ -66,6 +66,7 @@ const inActiveColor = ref(global.primaryColorLight);
 const inputDialog = ref(null);
 const popup = ref(null);
 const menuStore = useMenuStore();
+const userStore = useUserStore();
 const cartoonFaceSrc = ref('/static/cartoon/cartoon0-face0.png');
 const tim = ref(null);
 
@@ -116,10 +117,16 @@ const onClickCustomTag = (tag, index) => {
 // 对话框输入确认
 const dialogInputConfirm = (val) => {
 	const inputValue = val.trim();
-	if (inputValue) {
+	if (inputValue === "+" || !inputValue) return;
+	if (inputValue && inputValue.length < 8) {
 		customFood.value.add(inputValue);
 		console.log('Now Custom Food:', customFood.value);
-	}
+	} else {
+    uni.showToast({
+      title: '食材名称需少于8个字',
+      icon: 'none'
+    });
+  }
 };
 
 // 长按custom tag删除
@@ -168,6 +175,7 @@ const onClickCook = async () => {
 			url: "/api/menu/cook",
 			method: "POST",
 			payload: {
+				openid: userStore.userInfo.openid,
 				food: allSelectedFood.join(',')
 			}
 		})
@@ -185,7 +193,7 @@ const onClickCook = async () => {
 			});
 		} else {
 			uni.showToast({
-				title: res.msg || '烹饪失败，请重试',
+				title: res?.err===3 ? '今日烹饪次数已用完' : '烹饪失败，请重试',
 				icon: 'none'
 			});
 		}

@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema({
   gender: { type: Number, default: 2 },
   level: { type: Number, default: 0 },
   collections: { type: [Object], default: [] }, 
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  limit: { type: Number, default: 30 }, // 每日免费使用次数
 });
 
 module.exports = mongoose.model('User', userSchema);
