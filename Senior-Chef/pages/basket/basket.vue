@@ -1,4 +1,3 @@
-<!-- home 不是首页 -->
 <template>
 	<view class="container">
 		<view class="food-default" >
@@ -140,7 +139,7 @@ const onLongPressCustomTag = (tag, index) => {
 }
 
 // 点击烹饪按钮
-const menuTestJson = import('@/static/menu.test.json'); // 测试节省付费接口请求次数用
+// const menuTestJson = import('@/static/menu.test.json'); // 测试节省付费接口请求次数用
 
 
 const onClickCook = async () => {
@@ -149,9 +148,9 @@ const onClickCook = async () => {
 		...Array.from(selectedDefaultFood.value),
 		...Array.from(selectedCustomFood.value)
 	];
-	if (allSelectedFood.length < 2) {
+	if (allSelectedFood.length === 0) {
 		uni.showToast({
-			title: '请至少选择两种食材',
+			title: '请至少选择一种食材',
 			icon: 'none'
 		});
 		return;
@@ -165,24 +164,24 @@ const onClickCook = async () => {
 		title: '正在为您烹饪...'
 	});
 	try {
-		// const res = await utils.reqData({
-		// 	url: "/api/menu/cook",
-		// 	method: "POST",
-		// 	payload: {
-		// 		food: allSelectedFood.join(',')
-		// 	}
-		// })
-		await utils.wait(3);
+		const res = await utils.reqData({
+			url: "/api/menu/cook",
+			method: "POST",
+			payload: {
+				food: allSelectedFood.join(',')
+			}
+		})
+		// await utils.wait(3); // 测试用
 		clearInterval(tim.value);
 		tim.value = null;
 		cartoonFaceSrc.value = '/static/cartoon/cartoon0-face0.png';
 		uni.hideLoading();
-		const res = await menuTestJson; // 测试用
+		// const res = await menuTestJson; // 测试用
 		if (res && res.err === 0) {
 			menuStore.menuData = res.data;
 			console.log("菜单页数据已更新:", res.data)
 			uni.navigateTo({
-				url: '/pages/menu/menu'
+				url: '/pages/menu/menu?cate=1'
 			});
 		} else {
 			uni.showToast({

@@ -13,7 +13,7 @@
 			}
 		},
 		{
-			"path": "pages/home/home",
+			"path": "pages/basket/basket",
 			"style": {
 				"navigationBarTitleText": "天菜喵"
 			}
@@ -37,18 +37,6 @@
 			}
 		},
 		{
-			"path": "pages/menu/menu2",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		{
-			"path": "pages/menu/menu3",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		{
 			"path": "pages/favorites/favorites",
 			"style": {
 				"navigationBarTitleText": ""
@@ -56,12 +44,6 @@
 		},
 		{
 			"path": "pages/notes/notes",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		{
-			"path": "pages/recipe/recipe",
 			"style": {
 				"navigationBarTitleText": ""
 			}
@@ -86,7 +68,7 @@
         "text": "养生喵"
       },
 			{
-        "pagePath": "pages/home/home",
+        "pagePath": "pages/basket/basket",
         "iconPath": "static/tab-bar/basket-bw.png",
         "selectedIconPath": "static/tab-bar/basket.png",
         "text": "天菜喵"

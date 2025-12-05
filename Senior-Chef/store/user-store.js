@@ -28,7 +28,7 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
-  // cate: 0-有啥吃啥, 1-营养专家, 2-玄学大师
+  // cate: 0-养生喵, 1-天才喵, 2-占卜喵
   const addFavDish = async ({dish={}, cate=0}={}) => {
     try {
       utils.reqData({

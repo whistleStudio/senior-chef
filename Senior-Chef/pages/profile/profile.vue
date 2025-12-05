@@ -55,8 +55,8 @@ const avatarUrl = computed(() => {
 // 可替换为项目静态资源路径
 const profileContentList = ref([
   { icon: '/static/collect.png', label: '我的收藏', desc: '' },
-  { icon: '/static/contact.png', label: '联系客服', desc: '工作日 9:00 - 18:00' },
-  { icon: '/static/notes.png', label: '碎碎念念', desc: '' },
+  { icon: '/static/contact.png', label: '你好小喵', desc: '活动时间 9:00 - 18:00' },
+  { icon: '/static/notes.png', label: '碎碎唸唸', desc: '' },
 ])
 
 function onClickFav(idx) {

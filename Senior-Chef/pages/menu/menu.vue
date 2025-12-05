@@ -14,6 +14,10 @@ import { useMenuStore } from '../../store/menu-store'
 import Recipe from '../../components/Recipe/Recipe.vue'
 import { onLoad } from '@dcloudio/uni-app'
 
+uni.setNavigationBarTitle({
+	title: '小喵菜谱'
+});
+
 const menuStore = useMenuStore()
 const data = menuStore.menuData || {}
 const recipes = computed(() => data.recipes || [])
@@ -26,6 +30,7 @@ const cate = ref(0);
 onLoad((options) => {
 	// 页面加载时的逻辑（如果有需要）
 	cate.value = Number(options.cate) || 0;
+  console.log('菜单页加载，类别:', cate.value);
 });
 
 // // 简单版收藏状态（按你原来的形式）：固定长度数组初始化为 false

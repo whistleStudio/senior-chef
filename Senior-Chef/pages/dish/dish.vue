@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<Recipe :recipe="currentRecipe" />
+		<Recipe :recipe="currentRecipe" :cate="currentRecipe.cate"/>
 	</view>
 </template>
 
@@ -10,6 +10,9 @@ import { useUserStore } from '@/store/user-store'
 
 const { currentRecipe } = useUserStore()
 
+uni.setNavigationBarTitle({
+	title: '我的收藏'
+});
 
 </script>
 

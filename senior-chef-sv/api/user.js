@@ -3,7 +3,7 @@ const rt = express.Router();
 const { APPID, APPSECRET } = require('../private-data.json');
 const User = require('../db/model/User');
 
-console.log('User API Config:', { APPID, APPSECRET });
+// console.log('User API Config:', { APPID, APPSECRET });
 /* 登录获取用户对应的唯一openid */
 rt.post('/login', (req, res) => {
   const { code } = req.body;
@@ -55,7 +55,7 @@ rt.post('/getProfile', (req, res) => {
 });
 
 
-/* 单个菜品添加收藏；cate: 0-有啥吃啥, 1-营养专家, 2-玄学大师 */
+/* 单个菜品添加收藏；cate: 0-养生喵, 1-天菜喵, 2-占卜喵 */
 const maxCollectionsLength = 50; // 最大收藏数量限制
 rt.post('/addCollections', (req, res) => {
   const { openid, dish, cate } = req.body;

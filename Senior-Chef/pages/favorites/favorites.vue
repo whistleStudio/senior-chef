@@ -70,11 +70,11 @@ $shadow: rgba(43, 43, 43, 0.06);
 $accent: #e7fff6;
 
 /* 分类专用淡色渐变 */
-$card-a-start: #e6f0ff; // 淡蓝
-$card-a-end: #f7fbff;
+$card-a-start: #ffe6f0; // 淡粉
+$card-a-end: #fff7fb;
 
-$card-b-start: #ffe6f0; // 淡粉
-$card-b-end: #fff7fb;
+$card-b-start: #e6f0ff; // 淡蓝
+$card-b-end: #f7fbff;
 
 $card-c-start: #f0e6ff; // 淡紫
 $card-c-end: #f7f0ff;

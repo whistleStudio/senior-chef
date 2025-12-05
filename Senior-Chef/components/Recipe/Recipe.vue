@@ -21,7 +21,7 @@
       </view>
 
       <!-- 营养信息 -->
-      <view class="nutrition flex-row-center" v-if="recipe.nutrients">
+      <view class="nutrition" v-if="recipe.nutrients" :style="{justifyContent : (cate===0 ? 'flex-start' : 'space-between' )}">
         <view
           class="nutrition-item flex-row-center"
           v-for="([nutrName, nutr], nidx) in objectEntries(recipe.nutrients)"
@@ -71,6 +71,7 @@ const props = defineProps({
   cate: { type: Number, default: 0 }, 
 })
 const { recipe, isSingle, recipeIdx, cate } = toRefs(props)
+console.log("cate val:", cate.value);
 
 const userStore = useUserStore()
 
@@ -113,6 +114,13 @@ function trashClick() {
 		}
 	})
 }
+
+/* --------------------------------------------- */
+// onLoad((options) => {
+//   console.log('Recipe 组件加载，菜品:', options.cate, typeof options.cate)
+//   cate.value = Number(options.cate) || 0;
+// });
+
 </script>
 
 <style scoped lang="scss">
@@ -175,11 +183,14 @@ $shadow-color: rgba(43, 43, 43, 0.06);
 /* 营养信息 */
 .nutrition {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
   gap: 12rpx;
   margin-bottom: 16rpx;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
+
+
 
 .nutrition-item {
   display: flex;

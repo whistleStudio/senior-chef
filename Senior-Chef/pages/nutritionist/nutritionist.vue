@@ -115,46 +115,59 @@ const onClickCook = async () => {
       nutri_decrease.push(nutriMap[k]);
     }
   });
+  if (nutri_increase.length + nutri_decrease.length === 0) {
+		uni.showToast({
+			title: '请至少更改一种营养需求',
+			icon: 'none'
+		});
+		return;
+	}
   console.log('营养增量:', nutri_increase);
   console.log('营养减量:', nutri_decrease);
+
+
   tim.value = setInterval(() => {
     cartoonFaceSrc.value = cartoonFaceSrc.value === '/static/cartoon/cartoon1-face0.png' ?
       '/static/cartoon/cartoon1-face1.png' : '/static/cartoon/cartoon1-face0.png';
   }, 500);
   uni.showLoading({
-    title: '正在为您烹饪...'
+    title: '正在为您定制...'
   });
-  await utils.wait(3); // 测试等待时间
+  // await utils.wait(3); // 测试等待时间
   try {
-    // const res = await utils.reqData({
-    //   url: '/api/menu/nutritionist-cook',
-    //   method: 'POST',
-    //   payload: {
-    //     nutri_increase: nutri_increase.join(','),
-    //     nutri_decrease: nutri_decrease.join(','),
-    //     food_avoid: Array.from(selectedFoodExcept.value).join(',')
-    //   }
-    // });
+    const res = await utils.reqData({
+      url: '/api/menu/nutritionist-cook',
+      method: 'POST',
+      payload: {
+        nutri_increase: nutri_increase.join(','),
+        nutri_decrease: nutri_decrease.join(','),
+        food_avoid: Array.from(selectedFoodExcept.value).join(',')
+      }
+    });
+
     clearInterval(tim.value);
     tim.value = null;
     uni.hideLoading();
-    // if (res && res.err === 0) {
-    //   menuStore.menuData = res.data;
-    //   uni.navigateTo({
-    //     url: '/pages/menu/menu'
-    //   });
-    // } else {
-    //   uni.showToast({
-    //     title: res.msg || '烹饪失败，请重试',
-    //     icon: 'none'
-    //   });
-    // }
+
+
+    if (res && res.err === 0) {
+      menuStore.menuData = res.data;
+      uni.navigateTo({
+        url: '/pages/menu/menu?cate=0'
+      });
+    } else {
+      uni.showToast({
+        title: res.msg || '烹饪失败，请重试',
+        icon: 'none',
+        duration: 1000
+      });
+    }
     /* -----------测试用开始-------------- */
-    const res = await menuTestJson; 
-    menuStore.menuData = res;
-		uni.navigateTo({
-			url: '/pages/menu/menu?cate=1'
-		});
+    // const res = await menuTestJson; 
+    // menuStore.menuData = res;
+		// uni.navigateTo({
+		// 	url: '/pages/menu/menu?cate=0'
+		// });
     /* -----------测试用结束-------------- */
     console.log('Cook API Response:', res);
   } catch (err) {
