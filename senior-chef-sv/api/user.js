@@ -13,10 +13,12 @@ rt.post('/login', (req, res) => {
     const openid = code;
     User.findOneAndUpdate(
       { openid },
-      { $setOnInsert: { openid, nickname: `chef_${openid.slice(0, 6)}` } },
+      { $setOnInsert: { openid, nickname: `chef_test` } },
       { new: true, upsert: true }
-    ).catch(error => {});
-    res.json({err:1})
+    ).then(user => {
+      res.json({err:1, data: user});
+    })
+    .catch(error => {{err:2}});
     return;
   }
   /* --------h5测试结束----------- */
@@ -28,7 +30,7 @@ rt.post('/login', (req, res) => {
     // console.log('Extracted OpenID:', openid);
     const user = await User.findOneAndUpdate(
       { openid },
-      { $setOnInsert: { openid, nickname: `chef_${openid.slice(0, 6)}` } },
+      { $setOnInsert: { openid, nickname: `chef_${openid.slice(-6)}` } },
       { new: true, upsert: true }
     );
     res.json({err:0, data: user});

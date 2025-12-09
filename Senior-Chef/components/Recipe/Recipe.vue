@@ -21,9 +21,9 @@
       </view>
 
       <!-- 营养信息 -->
-      <view class="nutrition" v-if="recipe.nutrients" :style="{justifyContent : (cate===0 ? 'flex-start' : 'space-between' )}">
+      <view class="nutrition" v-if="recipe.nutrients" :style="{justifyContent : (cate===0 ? 'flex-start' : 'space-between') }">
         <view
-          class="nutrition-item flex-row-center"
+          class="nutrition-item flex-row-center" :style="{marginRight: (cate===0 ? '0rpx' : '0rpx !important')}"
           v-for="([nutrName, nutr], nidx) in objectEntries(recipe.nutrients)"
           :key="nutrName + nidx"
         >
@@ -201,7 +201,7 @@ $shadow-color: rgba(43, 43, 43, 0.06);
   padding: 10rpx;
   box-sizing: border-box;
   &:not(:last-of-type) {
-    margin-right: 8rpx;
+    margin-right: 8rpx !important;
   }
 }
 
@@ -218,7 +218,7 @@ $shadow-color: rgba(43, 43, 43, 0.06);
 
 .nrv-text {
   margin-left: 12rpx;
-  font-size: 28rpx;
+  font-size: 26rpx;
   color: $muted;
 }
 

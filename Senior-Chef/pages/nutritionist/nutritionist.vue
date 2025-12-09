@@ -3,7 +3,7 @@
     <view class="nutri-default">
       <view class="title flex-row-center">
         <!-- <image src="@/static/add.png" mode="aspectFit"/> -->
-        <text>营养规划</text>
+        <text>营养规划 <text style="font-size: 26rpx; color: #888;">(↑提高 / ↓减少摄入)</text></text>
       </view>
       <scroll-view class="content flex-row-center" scroll-y :show-scrollbar="false">
         <NutriToggle class="nutri-toggle"

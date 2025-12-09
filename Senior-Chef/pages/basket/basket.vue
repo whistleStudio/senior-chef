@@ -39,11 +39,21 @@
         src="@/static/cartoon/bubble.png"
         mode="aspectFit"
       />
+			<view class="dice-box flex-row-center" @click.stop="onClickDice">
+				<image style="height: 85%;"
+					src="@/static/dice.png"
+					mode="aspectFit"
+				/>
+			</view>
 		</view>                                  
 	</view>	
 	<uni-popup ref="inputDialog" type="dialog">
-		<uni-popup-dialog ref="inputClose"  mode="input" title="自定义食材" value="对话框预置提示内容!"
+		<uni-popup-dialog  mode="input" title="自定义食材" value="对话框预置提示内容!"
 			placeholder="请输入内容（长按标签删除）" @confirm="dialogInputConfirm"></uni-popup-dialog>
+	</uni-popup>
+
+	<uni-popup ref="randomDialog" type="dialog">
+		<uni-popup-dialog type="info"  cancelText="取消" confirmText="确定" title="随机食材" :content="`将使用【${randomSelectedFood.join(', ')}】进行烹饪`" @confirm="cook(randomSelectedFood.join(','))"></uni-popup-dialog>
 	</uni-popup>
 </template>
 
@@ -64,11 +74,12 @@ const current = ref(0);
 const activeColor = ref(global.primaryColorDark);
 const inActiveColor = ref(global.primaryColorLight);
 const inputDialog = ref(null);
-const popup = ref(null);
 const menuStore = useMenuStore();
 const userStore = useUserStore();
 const cartoonFaceSrc = ref('/static/cartoon/cartoon0-face0.png');
 const tim = ref(null);
+const randomDialog = ref(null);
+const randomSelectedFood = ref([]);
 
 const customTagStyle = `
 	display:flex;
@@ -145,12 +156,36 @@ const onLongPressCustomTag = (tag, index) => {
 	});
 }
 
+// 随机烹饪
+const onClickDice = () => {
+	randomDialog.value.open();
+	randomSelectedFood.value = [];
+	// 1-2个蔬菜
+	const vegs = chooseFoodByCounnt(foodList[0].vals, Math.floor(Math.random()*2)+1);
+	// 0-1个肉或鱼
+	const meats = chooseFoodByCounnt(foodList[1].vals.concat(foodList[2].vals), Math.floor(Math.random()*2));
+	// 0-1个其他
+	const others = chooseFoodByCounnt(foodList[3].vals, Math.floor(Math.random()*2));
+
+	randomSelectedFood.value = [...vegs, ...meats, ...others];
+	console.log('Randomly Selected Food:', randomSelectedFood.value);
+}
+function chooseFoodByCounnt(curFoodList, count) {
+	const selected = new Set();
+	while (selected.size < count) {
+		const randIdx = Math.floor(Math.random() * curFoodList.length);
+		selected.add(curFoodList[randIdx]);
+	}
+	return Array.from(selected);
+}
+
+
+
 // 点击烹饪按钮
 // const menuTestJson = import('@/static/menu.test.json'); // 测试节省付费接口请求次数用
 
 
 const onClickCook = async () => {
-	clearInterval(tim.value);
 	const allSelectedFood = [
 		...Array.from(selectedDefaultFood.value),
 		...Array.from(selectedCustomFood.value)
@@ -163,6 +198,11 @@ const onClickCook = async () => {
 		return;
 	}
 	console.log('Cooking with selected food...');
+	await cook(allSelectedFood.join(','));
+}
+
+async function cook (food) {
+	clearInterval(tim.value);
 	tim.value = setInterval(() => {
 		cartoonFaceSrc.value = cartoonFaceSrc.value === '/static/cartoon/cartoon0-face0.png' ? 
 		'/static/cartoon/cartoon0-face1.png' : '/static/cartoon/cartoon0-face0.png';
@@ -176,7 +216,7 @@ const onClickCook = async () => {
 			method: "POST",
 			payload: {
 				openid: userStore.userInfo.openid,
-				food: allSelectedFood.join(',')
+				food
 			}
 		})
 		// await utils.wait(3); // 测试用
@@ -207,8 +247,7 @@ const onClickCook = async () => {
 			icon: 'none'
 		});
 		return;
-	}
-
+	}	
 }
 
 </script>
@@ -269,5 +308,15 @@ $shadow-color: rgba(43, 43, 43, 0.06);
 	}
 }
 
+.dice-box {
+	position: absolute;
+	height: 90rpx;
+	width: 90rpx;
+	transform: translate(-50%);
+	top: 75%;
+	left: 90%;
+	border: 5rpx solid #81a5c0;
+	border-radius: 50%;
+}
 
 </style>

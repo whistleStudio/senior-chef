@@ -68,7 +68,13 @@
 				payload: {
 					code: 'test-code'
 				}
-			}).then(res => {console.log('App test login response:', res)})
+			}).then(res => {
+				console.log('App test login response:', res);
+				userStore.userInfo.openid = res.data.openid;
+				userStore.userInfo.nickname = res.data.nickname;
+				userStore.userInfo.gender = res.data.gender;
+				userStore.userInfo.collections = res.data.collections || [];
+			})
 			// #endif
 		},
 		onShow: function() {
