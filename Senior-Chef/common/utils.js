@@ -2,8 +2,8 @@ import privateData from '@/private-data.json';
 console.log('Private Data Loaded:', privateData);
 
 export default {
-  baseUrl: "http://localhost:8083", // 本地测试地址
-  // baseUrl: privateData.myBaseUrl, // 线上地址
+  // baseUrl: "http://localhost:8083", // 本地测试地址
+  baseUrl: privateData.myBaseUrl, // 线上地址
 
   reqData({url, method="GET", payload={}}={}) {
     return new Promise((rsv, rej) => {
